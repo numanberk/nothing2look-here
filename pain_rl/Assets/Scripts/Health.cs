@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,10 +19,12 @@ public class Health : MonoBehaviour
 
     private bool dead = false;
     private Animator anim;
+    private PlayerPain playerPain;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
+        playerPain = GetComponent<PlayerPain>();
         currentHealth = maxHealth;
         
 
@@ -47,13 +50,23 @@ public class Health : MonoBehaviour
                  //GEÇÝCÝ KOD//
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            Hit(10);
+            Hit(10, 1);
         }
-                 //GEÇÝCÝ KOD//
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Hit(10, 2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Hit(10, 3);
+        }
+        //GEÇÝCÝ KOD//
 
     }
 
-    void Hit(int damage)
+    void Hit(int damage, int source)
     {
 
         currentHealth -= damage;
@@ -74,6 +87,28 @@ public class Health : MonoBehaviour
             healthSlider.value = currentHealth;
             //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
         }
+
+        if(playerPain != null && currentHealth > 0)
+        {
+            playerPain.damage = damage;
+            playerPain.painGain?.Invoke();
+
+            if(source == 1)
+            {
+                playerPain.sourceDamage1 += damage;
+            }
+
+            if (source == 2)
+            {
+                playerPain.sourceDamage2 += damage;
+            }
+
+            if (source == 3)
+            {
+                playerPain.sourceDamage3 += damage;
+            }
+        }
+
 
     }
 

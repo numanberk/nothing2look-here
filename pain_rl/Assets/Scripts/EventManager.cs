@@ -15,4 +15,10 @@ public class EventManager : MonoBehaviour
         //Destroy(_gameObject);
     }
 
+    public void BarrelDie(GameObject gameObject1)
+    {
+        Debug.Log("barrell öldü.");
+        Destroy(gameObject1);
+    }
+
 }
