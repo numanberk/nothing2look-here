@@ -88,10 +88,8 @@ public class Health : MonoBehaviour
             //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
         }
 
-        if(playerPain != null && currentHealth > 0)
+        if(playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
         {
-            playerPain.damage = damage;
-            playerPain.painGain?.Invoke();
 
             if(source == 1)
             {
@@ -107,6 +105,7 @@ public class Health : MonoBehaviour
             {
                 playerPain.sourceDamage3 += damage;
             }
+            
         }
 
 
