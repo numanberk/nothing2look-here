@@ -4,7 +4,6 @@ using UnityEngine.Events;
 public class PlayerPain : MonoBehaviour
 {
     public static PlayerPain Instance;
-    private EventManager eventManager;
     public int sourceDamage1;
     public int sourceDamage2;
     public int sourceDamage3;
@@ -18,7 +17,6 @@ public class PlayerPain : MonoBehaviour
 
     private void Start()
     {
-        eventManager = Object.FindFirstObjectByType<EventManager>();
         totalPain = 0;
         sourceDamage1 = 0;
         sourceDamage2 = 0;
@@ -27,7 +25,7 @@ public class PlayerPain : MonoBehaviour
 
     private void Update()
     {
-        if(!eventManager.isPlayerDead)
+        if(!EventManager.Instance.isPlayerDead)
         {
             totalPain = sourceDamage1 + sourceDamage2 + sourceDamage3;
             PainMeter.Instance.targetValue = Mathf.Clamp(totalPain, 0, PainMeter.Instance.painMeter.maxValue);

@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
+    public static EventManager Instance;
     public bool isPlayerDead;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -12,7 +19,7 @@ public class EventManager : MonoBehaviour
     {
         Debug.Log("öldü.");
         isPlayerDead = true;
-        //Destroy(_gameObject);
+        Destroy(_gameObject);
     }
 
     public void BarrelDie(GameObject gameObject1)

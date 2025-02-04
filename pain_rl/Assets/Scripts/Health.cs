@@ -35,7 +35,7 @@ public class Health : MonoBehaviour
         }
         if(healthText != null)
         {
-            healthText.text = (currentHealth + "/" + maxHealth).ToString();
+            healthText.text = (currentHealth + " / " + maxHealth).ToString();
         }
     }
 
@@ -79,7 +79,7 @@ public class Health : MonoBehaviour
 
         if(healthText != null)
         {
-            healthText.text = (currentHealth + "/" + maxHealth).ToString();
+            healthText.text = (currentHealth + " / " + maxHealth).ToString();
         }
 
         if(healthSlider != null)
