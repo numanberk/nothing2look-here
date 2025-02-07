@@ -16,15 +16,15 @@ public class PainMeter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI redValue;
     [SerializeField] private TextMeshProUGUI greenValue;
     [SerializeField] private TextMeshProUGUI blueValue;
-    [SerializeField] private TextMeshProUGUI damageTaken;
-
+    [SerializeField] private TextMeshProUGUI damageTakenText;
+    [SerializeField] private TextMeshProUGUI maxPainText;
 
     [Header("DONT TOUCH")]
     public Slider painMeter;
     public float targetValue;
     [SerializeField] public GameObject Container_INT;
-    [SerializeField] public GameObject PercentageInfos_ALL;
     [SerializeField] public GameObject FillArea;
+    [SerializeField] public GameObject Fill;
     [SerializeField] public TextMeshProUGUI PercentValue;
 
 
@@ -32,6 +32,7 @@ public class PainMeter : MonoBehaviour
     private Color targetColor;
     private Image PM_Fill;
     private float color1, color2, color3;
+    private Animator anim;
 
 
     private void Awake()
@@ -41,6 +42,7 @@ public class PainMeter : MonoBehaviour
     private void Start()
     {
         painMeter = GetComponent<Slider>();
+        anim = GetComponent<Animator>();
         PM_Fill = painMeter.fillRect.GetComponent<Image>();
         eventManager = Object.FindFirstObjectByType<EventManager>();
         painMeter.maxValue = meterMax;
@@ -82,23 +84,29 @@ public class PainMeter : MonoBehaviour
         if(painMeter.value > painMeter.maxValue - lerpStopThreshold)
         {
             painMeter.value = painMeter.maxValue;
-        }    
+        }
 
-        if(painMeter.value == painMeter.maxValue)
+        if (painMeter.value == painMeter.maxValue)
         {
             Container_INT.GetComponent<Animator>().SetBool("isFull", true);
+            anim.SetBool("isFull", true);
+            Fill.GetComponent<Animator>().SetBool("isFull", true);
         }
         else
         {
-            Container_INT.GetComponent<Animator>().SetBool("isFull",false);
+            Container_INT.GetComponent<Animator>().SetBool("isFull", false);
+            anim.SetBool("isFull", false);
+            Fill.GetComponent<Animator>().SetBool("isFull", false);
         }
 
             float scaleFactor = Mathf.Lerp(0.03f, 0.25f, painMeter.value / painMeter.maxValue); //Fill'in gözüktüðü dalgalarýn boyutu için 0.02 ve 0.3 deðiþtirilebilir.
             FillArea.transform.localScale = new Vector3(scaleFactor, 1f, 1f);
             PercentValue.text = Mathf.RoundToInt(painMeter.value/painMeter.maxValue*100).ToString();
-
-            damageTaken.text = PlayerPain.Instance.totalPain + ("/") + painMeter.maxValue + " damage taken.";
             
+            
+            damageTakenText.text = Mathf.RoundToInt(PainMeter.Instance.painMeter.value).ToString();
+            maxPainText.text = painMeter.maxValue.ToString();
+
 
     }
 
@@ -128,15 +136,5 @@ public class PainMeter : MonoBehaviour
 
         // Set the new target color
         targetColor = new Color(color1, color2, color3);
-    }
-
-    public void PercentageInfoAnimationCome()
-    {
-        PercentageInfos_ALL.GetComponent<Animator>().SetTrigger("come");
-    }
-
-    public void PercentageInfoAnimationBack()
-    {
-        PercentageInfos_ALL.GetComponent<Animator>().SetTrigger("back");
     }
 }

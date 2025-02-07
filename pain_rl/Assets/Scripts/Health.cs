@@ -11,7 +11,7 @@ public class Health : MonoBehaviour
     [SerializeField] Slider healthSlider; //sadece önemi varsa
 
     [Header("Values")]
-    [SerializeField] int maxHealth;
+    [SerializeField] public int maxHealth;
     [SerializeField] int currentHealth;
 
     [Header("Events")]
@@ -35,7 +35,7 @@ public class Health : MonoBehaviour
         }
         if(healthText != null)
         {
-            healthText.text = (currentHealth + " / " + maxHealth).ToString();
+            healthText.text = (currentHealth).ToString();
         }
     }
 
@@ -66,7 +66,7 @@ public class Health : MonoBehaviour
 
     }
 
-    void Hit(int damage, int source)
+    public void Hit(int damage, int source)
     {
 
         currentHealth -= damage;
@@ -74,12 +74,12 @@ public class Health : MonoBehaviour
 
         if (anim != null)
         {
-            anim.SetTrigger("hit");
+            anim.SetTrigger("Hit");
         }
 
         if(healthText != null)
         {
-            healthText.text = (currentHealth + " / " + maxHealth).ToString();
+            healthText.text = (currentHealth).ToString();
         }
 
         if(healthSlider != null)
@@ -88,6 +88,10 @@ public class Health : MonoBehaviour
             //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
         }
 
+
+
+
+        //SADECE PLAYER VARSA GEÇERLÝ - playerPain assignlanmýþ olmalý!!!
         if(playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
         {
 
@@ -105,6 +109,8 @@ public class Health : MonoBehaviour
             {
                 playerPain.sourceDamage3 += damage;
             }
+
+            PainMeter.Instance.Container_INT.GetComponent<Animator>().SetTrigger("Filling");
             
         }
 

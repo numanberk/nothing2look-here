@@ -88,7 +88,6 @@ public class ColoredHierarchy : EditorWindow
         }
     }
 
-
     private static void LoadColors()
     {
         int count = EditorPrefs.GetInt("HierarchyObjectCount", 0);

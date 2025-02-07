@@ -1,71 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
-{
-    private EventManager eventManager;
+    public class PlayerMovement : MonoBehaviour
+    {
+        [SerializeField] public float speed;
 
 
-    private Rigidbody2D rb;
-    private Animator anim;
-    private float scaleX;
-    private float scaleY;
-    private float moveHorizontal;
-    private float moveVertical;
-    private Vector2 movement;
-    private int facingDirection = 1; // (1) -> sa� . (-1) -> sol
+        private Animator animator;
+        private PlayerAttack attackScript;
 
-    [SerializeField] float moveSpeed; 
-
-
+        private Vector2 moveDir = Vector2.zero;
+        private int animDirection;
 
     private void Start()
     {
-        anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        eventManager = Object.FindFirstObjectByType<EventManager>();
-        scaleY = gameObject.transform.localScale.y;
-        scaleX = gameObject.transform.localScale.x;
+            animator = GetComponent<Animator>();
+            attackScript = GetComponent<PlayerAttack>();
+
+            if (animator != null )
+            {
+                animDirection = 2;
+                animator.SetLayerWeight(1, 0);
+            }
     }
+
 
     private void Update()
     {
-        if (eventManager!= null)
+        HandleMovement();
+
+        if(moveDir.magnitude > 0 && !attackScript.isAttacking)
         {
-            if (eventManager.isPlayerDead)
-            {
-                movement = Vector2.zero;
-                if (anim != null)
-                    anim.SetFloat("Velocity", 0);
-                return;
-            }
+            animator.SetInteger("Direction", animDirection);
+        }
+        else
+        {
+            return;
+        }
+    }
 
-            moveHorizontal = Input.GetAxisRaw("Horizontal");
-            moveVertical = Input.GetAxisRaw("Vertical");
-            movement = new Vector2(moveHorizontal, moveVertical);
+    private void HandleMovement()
+    {
+        moveDir = Vector2.zero;
+       
 
-
-            if (movement.magnitude > 1)
-                movement.Normalize();
-
-
-            if (anim != null)
-                anim.SetFloat("Velocity", movement.magnitude);
-            
-            if(movement.x != 0)
-                facingDirection = movement.x > 0 ? 1 : -1;
-
-
-            transform.localScale = new Vector2(scaleX * facingDirection, scaleY);
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            moveDir.x = -1;
+            animDirection = 1;
+        }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            moveDir.x = 1;
+            animDirection = 3;
+        }
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        {
+            moveDir.y = 1;
+            animDirection = 0;
+        }
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            moveDir.y = -1;
+            animDirection = 2;
         }
 
+        moveDir.Normalize();
 
-        else if (eventManager == null)
-            Debug.Log("Event Manager can not be found.");
-    }
+        // Use attack direction if attacking, otherwise use movement direction
+        
+        animator.SetBool("isMoving", moveDir.magnitude > 0);
 
-
-    private void FixedUpdate()
-    {
-        rb.linearVelocity = movement * moveSpeed;
+        GetComponent<Rigidbody2D>().linearVelocity = speed * moveDir;
     }
 }
+
