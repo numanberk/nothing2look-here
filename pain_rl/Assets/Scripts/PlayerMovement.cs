@@ -11,7 +11,7 @@ using UnityEngine;
         private PlayerAttack attackScript;
 
         private Vector2 moveDir = Vector2.zero;
-        private int animDirection;
+        public int animDirection;
 
     private void Start()
     {
@@ -21,7 +21,6 @@ using UnityEngine;
             if (animator != null )
             {
                 animDirection = 2;
-                animator.SetLayerWeight(1, 0);
             }
     }
 
@@ -38,6 +37,9 @@ using UnityEngine;
         {
             return;
         }
+
+        animator.SetFloat("MoveX", moveDir.x);
+        animator.SetFloat("MoveY", moveDir.y);
     }
 
     private void HandleMovement()

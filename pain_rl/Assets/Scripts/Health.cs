@@ -48,17 +48,17 @@ public class Health : MonoBehaviour
 
 
                  //GEÇÝCÝ KOD//
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && playerPain != null)
         {
             Hit(10, 1);
         }
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K) && playerPain != null)
         {
             Hit(10, 2);
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) && playerPain != null)
         {
             Hit(10, 3);
         }
@@ -75,6 +75,10 @@ public class Health : MonoBehaviour
         if (anim != null)
         {
             anim.SetTrigger("Hit");
+        }
+        else
+        {
+            Debug.Log("anim null");
         }
 
         if(healthText != null)
