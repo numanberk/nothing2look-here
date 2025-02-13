@@ -39,4 +39,6 @@ public class EventManager : MonoBehaviour
         Destroy(gameObject1);
     }
 
+
+
 }

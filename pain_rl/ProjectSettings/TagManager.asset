@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Destructible
+  - Barrel
   layers:
   - Default
   - TransparentFX
@@ -45,6 +46,9 @@ TagManager:
     locked: 0
   - name: Effects
     uniqueID: 851812163
+    locked: 0
+  - name: UI
+    uniqueID: 3397338495
     locked: 0
   m_RenderingLayers:
   - Default

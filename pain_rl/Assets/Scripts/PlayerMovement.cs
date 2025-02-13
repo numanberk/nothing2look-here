@@ -6,10 +6,13 @@ using UnityEngine;
     {
         [SerializeField] public float speed;
 
+        
+        public float baseSpeed;
+
 
         private Animator animator;
         private PlayerAttack attackScript;
-
+        private Sword swordScript;
         private Vector2 moveDir = Vector2.zero;
         public int animDirection;
 
@@ -17,11 +20,13 @@ using UnityEngine;
     {
             animator = GetComponent<Animator>();
             attackScript = GetComponent<PlayerAttack>();
-
+            swordScript = GetComponentInChildren<Sword>();
             if (animator != null )
             {
                 animDirection = 2;
             }
+
+            baseSpeed = speed;
     }
 
 
