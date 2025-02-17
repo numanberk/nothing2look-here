@@ -26,7 +26,7 @@ public class EntitySFX : MonoBehaviour
     public void BarrelDeathSFX()
     {
 
-        float volume = 1.4f;
+        float volume = 0.5f;
         int randomIndex;
         randomIndex = Random.Range(0, barrelDeath.Length);
 
@@ -34,7 +34,6 @@ public class EntitySFX : MonoBehaviour
         AudioSource audioSource = tempAudio.AddComponent<AudioSource>();
         audioSource.clip = barrelDeath[randomIndex];
         audioSource.volume = volume;
-        audioSource.spatialBlend = 1.0f; // Makes it 3D sound if applicable
         audioSource.Play();
 
         Destroy(tempAudio, barrelDeath[randomIndex].length); // Destroy the temporary object after the sound finishes

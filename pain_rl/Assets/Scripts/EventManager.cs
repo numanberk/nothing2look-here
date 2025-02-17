@@ -26,18 +26,7 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public void PlayerDie(GameObject _gameObject)
-    {
-        Debug.Log("öldü.");
-        isPlayerDead = true;
-        Destroy(_gameObject);
-    }
 
-    public void BarrelDie(GameObject gameObject1)
-    {
-        Debug.Log("barrell öldü.");
-        Destroy(gameObject1);
-    }
 
 
 

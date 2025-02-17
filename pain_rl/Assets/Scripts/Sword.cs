@@ -3,11 +3,16 @@ using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
+
+    public static Sword instance;
+
     [Header("Values")]
     [SerializeField] public int attackDamage;
     [SerializeField] public float attackRange;
     [SerializeField] public float attackAngle;
     [SerializeField] public float attackCooldown;
+    [SerializeField] public float critChance;
+    [SerializeField] public float critDamageMultiplier;
     [SerializeField] public float animationLength; //BUNU DEÐÝÞTÝRÝRSEN 1) FAKE SWORD YOK OLUP GERÇEÐÝ GELEN ANÝMASYONUN SÜRESÝNÝ    2) TRAIL EFFECT ANÝMASYONULARININ SÜRESÝNÝ BUNU EÞÝTLE ANÝMATÖRDE.
     [SerializeField] public float comboResetTime; //BUNU DEÐÝÞTÝRÝRSEN SWING 1 VE 2 YAPILIRKEN PLAYERDA GÖZÜKEN ANÝMASYONUN NORMALE DÖNME SÜRESÝNÝ DE AYARLA. EÐER COMBO DEVAM EDEBÝLECEK DURUMDAYSA PLAYER DAHA GERGÝN? DURSUN KÝ COMBO NE ZAMAN BÝTTÝ ANLAÞILSIN. + FAKE SWORD IDLE'A GÝDERKEN OLAN EXIT TIMELARI DEÐÝÞTÝR.
     [SerializeField] public float hitStopTime;
@@ -16,6 +21,9 @@ public class Sword : MonoBehaviour
     [SerializeField] public float thirdHitDamageMultiplier;
     [SerializeField] public float thirdHitRangeMultiplier;
     [SerializeField] public float thirdHitAngle;
+    [SerializeField] public float maxChargeInSeconds;  //BUNU DEÐÝÞTÝRÝRSEN PLAYER CHARGE ANÝMASYONU KAÇ SANÝYE ONU DA DEÐÝÞTÝRMEN GEREKÝR. + PLAYER ATTACK'TA BU DEÐERÝN ETKÝLEDÝÐÝ HASARIN DEÐÝÞÝM HIZINI DEÐÝÞTÝRMEN GEREKÝR.
+    [SerializeField] public float maxChargeDamageMultiplier;
+    [Space]
     [SerializeField] public float delayBeforeThirdHit; // BUNU DEÐÝÞTÝRÝRSEN PLAYER ANÝMATÖRÜNDEKÝ!!! (sword deðil) SWORDATTACK3 ANÝMASYONUNUN DELAY GÖSTERMELÝK ÝLK KISMINI DA OYNATMAN GEREKÝR!
     [SerializeField] public float delayAfterThirdHit; // YENÝ KOMBO BAÞLATABÝLMEK ÝÇÝN GEREKLÝ SÜRE. bi üstteki animasyonunun aynýsýnýn son kýsmýný deðiþtirmen gerekir.
     [SerializeField] public float thirdHitAnimLength;
@@ -26,18 +34,27 @@ public class Sword : MonoBehaviour
     [SerializeField] public Transform sword;
     [SerializeField] public Animator swordAnimator;
     [SerializeField] public GameObject impactEffect;
+    [SerializeField] public GameObject impactEffectRED;
 
     [Header("Sound Effects")]
     [SerializeField] public AudioClip[] swordSlash;
     [SerializeField] public AudioClip[] powerSlash;
     [SerializeField] public AudioClip chargePowerSlash;
+    [SerializeField] public AudioClip critSFX;
 
     [Header("DONT TOUCH")]
     public int attackInt;
     public bool changedValues;
     private AudioSource audioSource;
     private int lastSlashIndex = -1;
+    private int lastPowerSlashIndex = -1;
+    public GameObject impactEffectToShow;
 
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Update()
     {
@@ -61,7 +78,7 @@ public class Sword : MonoBehaviour
     }
     private void Start()
     {
-
+        impactEffectToShow = impactEffect;
         audioSource = GetComponentInParent<AudioSource>();
 
         PlayerAttack.Instance.sword = true;
@@ -72,7 +89,7 @@ public class Sword : MonoBehaviour
     private void ChangeValues()
     {
         changedValues = true;
-        PlayerAttack.Instance.attackDamage = Mathf.RoundToInt(attackDamage * thirdHitDamageMultiplier);
+        PlayerAttack.Instance.damageMultiplierWeapon = thirdHitDamageMultiplier;
         PlayerAttack.Instance.attackAngle = thirdHitAngle;
         PlayerAttack.Instance.attackRange = Mathf.RoundToInt(attackRange * thirdHitRangeMultiplier);
         PlayerAttack.Instance.attackCooldown = thirdHitAnimLength + delayAfterThirdHit;
@@ -85,11 +102,16 @@ public class Sword : MonoBehaviour
         PlayerAttack.Instance.attackDamage = attackDamage;
         PlayerAttack.Instance.attackRange = attackRange;
         PlayerAttack.Instance.attackAngle = attackAngle;
+        PlayerAttack.Instance.damageMultiplierWeapon = 1;
         PlayerAttack.Instance.attackCooldown = attackCooldown;
         PlayerAttack.Instance.animationLength = animationLength;
         PlayerAttack.Instance.comboResetTime = comboResetTime;
         PlayerAttack.Instance.hitStopTime = hitStopTime;
         PlayerAttack.Instance.powerfulShakeMultiplier = 1f;
+        PlayerAttack.Instance.critChance = critChance;
+        PlayerAttack.Instance.critDamageMultiplier = critDamageMultiplier;
+        PlayerAttack.Instance.maxCharge = maxChargeInSeconds;
+        PlayerAttack.Instance.maxChargeDamageMultiplier = maxChargeDamageMultiplier;
     }
 
     private IEnumerator WaitToChangeValues()
@@ -118,7 +140,12 @@ public class Sword : MonoBehaviour
         if (powerSlash.Length > 0)
         {
             int randomIndex;
-            randomIndex = Random.Range(0, powerSlash.Length);
+            do
+            {
+                randomIndex = Random.Range(0, powerSlash.Length);
+            } while (randomIndex == lastPowerSlashIndex);
+
+            lastPowerSlashIndex = randomIndex;
             audioSource.PlayOneShot(powerSlash[randomIndex]);
         }
     }
@@ -128,6 +155,12 @@ public class Sword : MonoBehaviour
     {
         if(chargePowerSlash != null)
             audioSource.PlayOneShot(chargePowerSlash);
+    }
+
+    public void CritSFX()
+    {
+        if (critSFX != null)
+            audioSource.PlayOneShot(critSFX);
     }
 
 

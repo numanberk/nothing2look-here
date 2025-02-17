@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using TMPro;
 using UnityEngine;
@@ -9,23 +11,34 @@ public class Health : MonoBehaviour
     [Header("Assign")]
     [SerializeField] TextMeshProUGUI healthText; //sadece önemi varsa
     [SerializeField] Slider healthSlider; //sadece önemi varsa
+    [SerializeField] public GameObject FloatingHitTextPrefab;
 
     [Header("Values")]
     [SerializeField] public int maxHealth;
     [SerializeField] int currentHealth;
 
     [Header("Events")]
+    public UnityEvent OnHit;
     public UnityEvent OnDeath;
 
+    private int lastHitTaken;
     private bool dead = false;
     private Animator anim;
     private PlayerPain playerPain;
+    public Canvas canvas;
+    public RectTransform canvasRT;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         playerPain = GetComponent<PlayerPain>();
         currentHealth = maxHealth;
+        canvas = GetComponentInChildren<Canvas>();
+        if(canvas != null )
+        {
+            canvasRT = canvas.gameObject.GetComponent<RectTransform>();
+        }
+
         
 
         if (healthSlider != null)
@@ -68,7 +81,7 @@ public class Health : MonoBehaviour
 
     public void Hit(int damage, int source)
     {
-
+        lastHitTaken = damage;
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -95,8 +108,10 @@ public class Health : MonoBehaviour
 
 
 
+
+
         //SADECE PLAYER VARSA GEÇERLÝ - playerPain assignlanmýþ olmalý!!!
-        if(playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
+        if (playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
         {
 
             if(source == 1)
@@ -118,6 +133,8 @@ public class Health : MonoBehaviour
             
         }
 
+        OnHit?.Invoke();
+
 
     }
 
@@ -126,4 +143,58 @@ public class Health : MonoBehaviour
         dead = true;
         OnDeath?.Invoke();
     }
+
+    public void FloatingHitText()
+    {
+        if(FloatingHitTextPrefab != null)
+        {
+            Vector2 newPos;
+            newPos.x = canvasRT.transform.position.x;
+            newPos.y = canvasRT.transform.position.y;
+
+
+            var go = Instantiate(FloatingHitTextPrefab, newPos, Quaternion.identity, canvas.transform);
+
+
+            //SCALE MULTIPLIER
+            float damageMultiplierPain = 1 + (PainMeter.Instance.painMeter.value / PainMeter.Instance.painMeter.maxValue);
+            float finalToCalculate = PlayerAttack.Instance.attackDamage * damageMultiplierPain; //FINAL TO CALCULATE, PLAYER ATTACK'TAKÝ RENGÝ ETKÝLEYEN DEÐÝÞKENLER SONRASINDA NE ÝLE ÇARPILIYORSA BASE ATK DAMAGE'Ý ONUNLA ÇARPMALI.
+
+            go.GetComponent<FloatingHitText>().scaleMultiplier = (float)lastHitTaken / finalToCalculate;
+            go.GetComponent<FloatingHitText>().scaleMultiplier = Mathf.Clamp(go.GetComponent<FloatingHitText>().scaleMultiplier, 1f, 1.8f);
+
+            //COLOR
+            float colorFloat = (float)lastHitTaken / finalToCalculate;
+            colorFloat = Mathf.Clamp(colorFloat, 1f, 2f);
+            go.GetComponent<TextMeshProUGUI>().color = new Color(1f,2 - colorFloat ,0f);
+
+            //TEXT
+            if(colorFloat >= 2f)
+            {
+                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString() + "!";
+                Sword.instance.impactEffectToShow = Sword.instance.impactEffectRED;
+            }
+            else
+            {
+                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString();
+                Sword.instance.impactEffectToShow = Sword.instance.impactEffect;
+            }
+
+        }
+
+    }
+
+
+    public void PlayerDie(GameObject _gameObject)
+    {
+        Debug.Log("öldü.");
+        EventManager.Instance.isPlayerDead = true;
+        Destroy(_gameObject);
+    }
+
+    public void BarrelDie(GameObject gameObject1)
+    {
+        Destroy(gameObject1);
+    }
+
 }
