@@ -10,7 +10,7 @@ public class Health : MonoBehaviour
 {
     [Header("Assign")]
     [SerializeField] TextMeshProUGUI healthText; //sadece önemi varsa
-    [SerializeField] Slider healthSlider; //sadece önemi varsa
+    [SerializeField] public Slider healthSlider; //sadece önemi varsa
     [SerializeField] public GameObject FloatingHitTextPrefab;
 
     [Header("Values")]
@@ -21,32 +21,43 @@ public class Health : MonoBehaviour
     public UnityEvent OnHit;
     public UnityEvent OnDeath;
 
+    [Header("DONT TOUCH")]
+    private ChainOnEnemy chain;
     private int lastHitTaken;
+    public bool lastHitTakenWasCrit;
     private bool dead = false;
     private Animator anim;
     private PlayerPain playerPain;
     public Canvas canvas;
     public RectTransform canvasRT;
+    private bool originalHit;
+    private GameObject sprites;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         playerPain = GetComponent<PlayerPain>();
         currentHealth = maxHealth;
+
+        Transform spritesTransform = this.gameObject.transform.Find("Sprites");
+        if (spritesTransform != null)
+        {
+            sprites = spritesTransform.gameObject;
+        }
         canvas = GetComponentInChildren<Canvas>();
-        if(canvas != null )
+        if (canvas != null)
         {
             canvasRT = canvas.gameObject.GetComponent<RectTransform>();
         }
 
-        
+
 
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
-            healthSlider.value = currentHealth; 
+            healthSlider.value = currentHealth;
         }
-        if(healthText != null)
+        if (healthText != null)
         {
             healthText.text = (currentHealth).ToString();
         }
@@ -59,9 +70,14 @@ public class Health : MonoBehaviour
             Die();
         }
 
+        if (chain == null)
+        {
+            chain = GetComponentInChildren<ChainOnEnemy>();
+        }
 
-                 //GEÇÝCÝ KOD//
-        if(Input.GetKeyDown(KeyCode.Space) && playerPain != null)
+
+        //GEÇÝCÝ KOD//
+        if (Input.GetKeyDown(KeyCode.Space) && playerPain != null)
         {
             Hit(10, 1);
         }
@@ -94,17 +110,23 @@ public class Health : MonoBehaviour
             Debug.Log("anim null");
         }
 
-        if(healthText != null)
+        if (healthText != null)
         {
             healthText.text = (currentHealth).ToString();
         }
 
-        if(healthSlider != null)
+        if (healthSlider != null)
         {
             healthSlider.value = currentHealth;
             //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
         }
 
+
+
+        if (source != -1) //-1, düþmanlarýn kendine sektirmesi için olan source kodu.
+        {
+            StartCoroutine(CheckChain(damage));
+        }
 
 
 
@@ -114,7 +136,7 @@ public class Health : MonoBehaviour
         if (playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
         {
 
-            if(source == 1)
+            if (source == 1)
             {
                 playerPain.sourceDamage1 += damage;
             }
@@ -130,14 +152,19 @@ public class Health : MonoBehaviour
             }
 
             PainMeter.Instance.Container_INT.GetComponent<Animator>().SetTrigger("Filling");
-            
+
         }
 
-        OnHit?.Invoke();
+        StartCoroutine(OnHitDelayer());
 
 
     }
 
+    private IEnumerator OnHitDelayer()
+    {
+        yield return new WaitForSeconds(0.02f);
+        OnHit?.Invoke();
+    }
     void Die()
     {
         dead = true;
@@ -146,7 +173,7 @@ public class Health : MonoBehaviour
 
     public void FloatingHitText()
     {
-        if(FloatingHitTextPrefab != null)
+        if (FloatingHitTextPrefab != null && canvasRT != null)
         {
             Vector2 newPos;
             newPos.x = canvasRT.transform.position.x;
@@ -166,19 +193,16 @@ public class Health : MonoBehaviour
             //COLOR
             float colorFloat = (float)lastHitTaken / finalToCalculate;
             colorFloat = Mathf.Clamp(colorFloat, 1f, 2f);
-            go.GetComponent<TextMeshProUGUI>().color = new Color(1f,2 - colorFloat ,0f);
-
-            //TEXT
-            if(colorFloat >= 2f)
+            go.GetComponent<TextMeshProUGUI>().color = new Color(1f, 2 - colorFloat, 0f);
+            if (!lastHitTakenWasCrit)
             {
-                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString() + "!";
-                Sword.instance.impactEffectToShow = Sword.instance.impactEffectRED;
+                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString();
             }
             else
             {
-                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString();
-                Sword.instance.impactEffectToShow = Sword.instance.impactEffect;
+                go.GetComponent<TextMeshProUGUI>().text = lastHitTaken.ToString() + "!";
             }
+
 
         }
 
@@ -192,9 +216,70 @@ public class Health : MonoBehaviour
         Destroy(_gameObject);
     }
 
-    public void BarrelDie(GameObject gameObject1)
+    public void ObjectDie(GameObject gameObject1)
     {
-        Destroy(gameObject1);
+        StartCoroutine(Destroyer(gameObject1));
     }
 
+    private IEnumerator CheckChain(int damage)
+    {
+        yield return new WaitForSeconds(0.018f);
+        if (chain != null)
+        {
+            chain.skill.DamageDistribution(damage, this.gameObject);
+        }
+    }
+
+    IEnumerator Destroyer(GameObject go)
+    {
+
+
+        SpriteRenderer[] sr = GetComponentsInChildren<SpriteRenderer>();
+        foreach (var c in sr)
+        {
+            c.enabled = false;
+        }
+
+        if (sprites != null)
+        {
+            sprites.SetActive(false);
+        }
+
+
+        var rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+        }
+
+        var collider = GetComponent<CircleCollider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        var collider2 = GetComponent<CapsuleCollider2D>();
+        if (collider2 != null)
+        {
+            collider2.enabled = false;
+        }
+
+        if (canvas != null)
+        {
+            canvas.enabled = false;
+        }
+
+        yield return new WaitForSeconds(0.018f);
+
+        Destroy(go);
+    }
 }
+
+
+
+
+
+
+
+
+    

@@ -36,7 +36,11 @@ using UnityEngine;
 
         if(moveDir.magnitude > 0 && !attackScript.isAttacking)
         {
-            animator.SetInteger("Direction", animDirection);
+            if(attackScript.sword && !Sword.instance.isCharging)
+            {
+                animator.SetInteger("Direction", animDirection);
+            }
+            
         }
         else
         {

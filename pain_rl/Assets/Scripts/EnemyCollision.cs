@@ -7,6 +7,15 @@ public class EnemyCollision : MonoBehaviour
     public float damageCooldown = 0.5f; // Time between damage instances
     private float lastDamageTime;
 
+    private DasherEnemyAI dasher;
+    private EntitySFX sfx;
+
+    private void Start()
+    {
+        dasher = GetComponent<DasherEnemyAI>();
+        sfx = GetComponent<EntitySFX>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && Time.time >= lastDamageTime + damageCooldown)
@@ -14,19 +23,51 @@ public class EnemyCollision : MonoBehaviour
             Health playerHealth = other.GetComponent<Health>();
             if (playerHealth != null)
             {
-                playerHealth.Hit(damage, source);
-                lastDamageTime = Time.time; // Update the last damage time
+                if (dasher != null && dasher.isDashing)
+                {
+                    playerHealth.Hit(Mathf.RoundToInt(damage * dasher.dashDamageMultiplier), source);
+
+
+                    DasherHitSomething();
+
+                    lastDamageTime = Time.time;
+                }
+                else
+                {
+                    playerHealth.Hit(damage, source);
+                    lastDamageTime = Time.time;
+                }
             }
-
-            // Optional: Knock the player back
-            //Rigidbody2D playerRb = other.GetComponent<Rigidbody2D>();
-            //if (playerRb != null)
-            //{
-            //Vector2 knockback = (other.transform.position - transform.position).normalized * 5f;
-            //playerRb.AddForce(knockback, ForceMode2D.Impulse);
-            //}
-
             Debug.Log("Player Damaged");
         }
+
+        if(other.CompareTag("Barrel") && dasher != null && dasher.isDashing)
+        {
+
+            Health barrelHealth = other.GetComponent<Health>();
+            barrelHealth.Hit(Mathf.RoundToInt(damage * dasher.dashDamageMultiplier), 0);
+            other.GetComponent<EntitySFX>().BarrelHitSFX();
+            DasherHitSomething();
+        }
+
+        if (other.CompareTag("Enemy") && dasher != null && dasher.isDashing)
+        {
+
+            Health enemyHealth = other.GetComponent<Health>();
+            enemyHealth.Hit(Mathf.RoundToInt(damage * dasher.dashDamageMultiplier), 0);
+            //other.GetComponent<EntitySFX>().SFX();
+            DasherHitSomething();
+        }
+    }
+
+    void DasherHitSomething()
+    {
+        dasher.stunAfterDash *= dasher.stunAfterHitMultiplier;
+        dasher.StopDash();
+        dasher.GetComponent<Health>().Hit(Mathf.RoundToInt(damage * dasher.dashDamageMultiplier), 0);
+        dasher.Stun.SetActive(true);
+        StartCoroutine(dasher.StunAfterDash());
+        StopCoroutine(dasher.dashCoroutine);
+        sfx.StunSFX();
     }
 }
