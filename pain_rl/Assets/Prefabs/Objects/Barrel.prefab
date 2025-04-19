@@ -401,7 +401,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7542877118202732891}
-  m_BodyType: 2
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -435,7 +435,6 @@ MonoBehaviour:
   healthText: {fileID: 0}
   healthSlider: {fileID: 8125838119425548417}
   FloatingHitTextPrefab: {fileID: 5467357853809653287, guid: 8056e03b5857d7743a07b016f1b52c31, type: 3}
-  FloatingHitTextPrefabDeath: {fileID: 5467357853809653287, guid: 8f991ab1062f5314b9061e33d108c62d, type: 3}
   maxHealth: 100
   currentHealth: 0
   OnHit:
@@ -493,6 +492,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   lastHitTakenWasCrit: 0
+  dead: 0
   canvas: {fileID: 0}
   canvasRT: {fileID: 0}
 --- !u!95 &1608728670342123771
@@ -551,8 +551,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.10209373, y: -1.23}
-  m_Size: {x: 8.372256, y: 8.555744}
+  m_Offset: {x: -0.18469693, y: -1.2299997}
+  m_Size: {x: 8.537463, y: 8.724511}
   m_Direction: 0
 --- !u!114 &6003555753296565759
 MonoBehaviour:
@@ -588,6 +588,15 @@ MonoBehaviour:
   enemyConfused: []
   bow: []
   stun: []
+  chainProjectile: {fileID: 0}
+  chainHit: {fileID: 0}
+  chainActive: {fileID: 0}
+  chainSearchLoop: {fileID: 0}
+  chainLocked: {fileID: 0}
+  chainBreak: {fileID: 0}
+  annihilationCharge: {fileID: 0}
+  explosion: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!82 &8254118764684588939
 AudioSource:
   m_ObjectHideFlags: 0
@@ -601,7 +610,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 0.079
   m_Pitch: 1
   Loop: 0
   Mute: 0

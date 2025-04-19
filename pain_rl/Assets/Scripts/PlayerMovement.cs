@@ -15,6 +15,7 @@ using UnityEngine;
         private Sword swordScript;
         private Vector2 moveDir = Vector2.zero;
         public int animDirection;
+        private GameObject Player;
 
     private void Start()
     {
@@ -27,6 +28,7 @@ using UnityEngine;
             }
 
             baseSpeed = speed;
+            Player = this.gameObject;
     }
 
 
@@ -36,7 +38,7 @@ using UnityEngine;
 
         if(moveDir.magnitude > 0 && !attackScript.isAttacking)
         {
-            if(attackScript.sword && !Sword.instance.isCharging)
+            if(attackScript.sword && !Player.GetComponentInChildren<Sword>().isCharging)
             {
                 animator.SetInteger("Direction", animDirection);
             }

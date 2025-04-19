@@ -42,6 +42,10 @@ public class PlayerAttack : MonoBehaviour
     public Vector2 lockedAttackDir;
     public bool coroutineStarted;
     public GameObject Player;
+    public bool isIdle;
+    public Vector2 attackDir;
+    public static System.Action<int> OnPlayerAttacked;
+
     [Space]
     [Header("WEAPON SELECTION")]
     public bool sword = false;
@@ -49,10 +53,21 @@ public class PlayerAttack : MonoBehaviour
     public float testAngle;
 
 
-    private void Awake()
+    void Awake()
     {
-        Instance = this;
+        if (Instance == null && CompareTag("Player"))
+        {
+            Instance = this;
+            Debug.Log("PlayerAttack.Instance assigned to: " + gameObject.name);
+        }
+        else if (Instance != null && this != Instance)
+        {
+            Debug.Log("Prevented clone from overriding PlayerAttack.Instance: " + gameObject.name);
+        }
     }
+
+
+
 
     private void Start()
     {
@@ -72,6 +87,10 @@ public class PlayerAttack : MonoBehaviour
         attackObjectParent.position = attackPoint.transform.position;
 
         //eğer sword ise ve chargeDir / attackDir birbirinden farklıysa değişiyorsa ona göre flipletme???
+        if(sword)
+        {
+            attackDir = swordScript.attackDir;
+        }
     }
 
 
@@ -164,6 +183,7 @@ public class PlayerAttack : MonoBehaviour
                 attackInt = 1;
                 canCombo = false;
                 attackObjectAnimator.SetTrigger("idle");
+                isIdle = true;
             }
         }
 

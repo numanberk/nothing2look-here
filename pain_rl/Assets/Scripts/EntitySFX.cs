@@ -16,8 +16,12 @@ public class EntitySFX : MonoBehaviour
     [SerializeField] public AudioClip chainSearchLoop;
     [SerializeField] public AudioClip chainLocked;
     [SerializeField] public AudioClip chainBreak;
+    [SerializeField] public AudioClip annihilationCharge;
+    [SerializeField] public AudioClip explosion;
 
     public AudioSource audioSource;
+    private float baseVolume;
+    private float basePitch;
 
 
     private void Awake()
@@ -27,6 +31,12 @@ public class EntitySFX : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>(); // Add it dynamically
         }
+    }
+
+    private void Start()
+    {
+        baseVolume = audioSource.volume;
+        basePitch = audioSource.pitch;
     }
 
     private void Update()
@@ -145,7 +155,26 @@ public class EntitySFX : MonoBehaviour
 
     }
 
+    public void AnnihilationCharge()
+    {
+        audioSource.clip = annihilationCharge;
+        audioSource.pitch = basePitch;
+        audioSource.Play();
+    }
 
+    public void AnnihilationGo()
+    {
+        audioSource.Stop();
+        audioSource.pitch = 1;
+        audioSource.PlayOneShot(explosion);
+        StartCoroutine(VolumeDelay());
+    }
+
+    IEnumerator VolumeDelay()
+    {
+        yield return new WaitForSeconds(explosion.length);
+        audioSource.volume = baseVolume;
+    }
 
 
 

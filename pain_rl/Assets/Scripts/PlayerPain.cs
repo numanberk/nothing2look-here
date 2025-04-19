@@ -8,6 +8,7 @@ public class PlayerPain : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI maxHealthPlayer;
 
+
     [Space]
 
     [Header("DONT TOUCH")]
@@ -15,17 +16,28 @@ public class PlayerPain : MonoBehaviour
     public int sourceDamage2;
     public int sourceDamage3;
     public float totalPain;
+    public bool canFillPain;
+    public int latestSource;
 
     private Health healthScript;
 
-    private void Awake()
+    void Awake()
     {
-        Instance = this;
+        if (Instance == null && CompareTag("Player"))
+        {
+            Instance = this;
+            Debug.Log("PlayerPain.Instance assigned to: " + gameObject.name);
+        }
+        else if (Instance != null && this != Instance)
+        {
+            Debug.Log("Prevented clone from overriding PlayerPain.Instance: " + gameObject.name);
+        }
     }
 
     private void Start()
     {
         healthScript = GetComponent<Health>();
+        canFillPain = true;
         totalPain = 0;
         sourceDamage1 = 0;
         sourceDamage2 = 0;
@@ -40,14 +52,36 @@ public class PlayerPain : MonoBehaviour
 
     private void Update()
     {
-        if(!EventManager.Instance.isPlayerDead)
+        if (!EventManager.Instance.isPlayerDead)
         {
-            totalPain = sourceDamage1 + sourceDamage2 + sourceDamage3;
-            PainMeter.Instance.targetValue = Mathf.Clamp(totalPain, 0, PainMeter.Instance.painMeter.maxValue);
-        }
-        
+            // Clamp to prevent negatives
+            sourceDamage1 = Mathf.Max(sourceDamage1, 0);
+            sourceDamage2 = Mathf.Max(sourceDamage2, 0);
+            sourceDamage3 = Mathf.Max(sourceDamage3, 0);
 
-        
+            totalPain = Mathf.Clamp(sourceDamage1 + sourceDamage2 + sourceDamage3, 0, PainMeter.Instance.painMeter.maxValue);
+            PainMeter.Instance.targetValue = Mathf.Clamp(totalPain, 0, PainMeter.Instance.painMeter.maxValue);
+
+            if(sourceDamage1 + sourceDamage2 + sourceDamage3 > PainMeter.Instance.painMeter.maxValue)
+            {
+                int over100percent = Mathf.RoundToInt(sourceDamage1 + sourceDamage2 + sourceDamage3 - PainMeter.Instance.painMeter.maxValue);
+                if(latestSource == 1)
+                {
+                    sourceDamage1 -= over100percent;
+                }
+
+                if(latestSource == 2)
+                {
+                    sourceDamage2 -= over100percent;
+                }
+
+                if(latestSource == 3)
+                {
+                    sourceDamage3 -= over100percent;
+                }
+            }
+        }
     }
+
 
 }

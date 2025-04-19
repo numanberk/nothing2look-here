@@ -25,7 +25,10 @@ public class PainMeter : MonoBehaviour
     [SerializeField] public GameObject Container_INT;
     [SerializeField] public GameObject FillArea;
     [SerializeField] public GameObject Fill;
+    [SerializeField] public GameObject Lock;
+    [SerializeField] public GameObject Percent;
     [SerializeField] public TextMeshProUGUI PercentValue;
+    public bool isFull;
 
 
     private EventManager eventManager;
@@ -80,23 +83,21 @@ public class PainMeter : MonoBehaviour
         {
             painMeter.value = Mathf.Lerp(painMeter.value, targetValue, Time.deltaTime * lerpSpeed); //LERP gerektirenler UPDATE'de olmak zorunda!!!
         }
-            
-        if(painMeter.value > painMeter.maxValue - lerpStopThreshold)
-        {
-            painMeter.value = painMeter.maxValue;
-        }
+           
 
-        if (painMeter.value == painMeter.maxValue)
+        if (painMeter.value > painMeter.maxValue - lerpStopThreshold)
         {
             Container_INT.GetComponent<Animator>().SetBool("isFull", true);
             anim.SetBool("isFull", true);
             Fill.GetComponent<Animator>().SetBool("isFull", true);
+            isFull = true;
         }
         else
         {
             Container_INT.GetComponent<Animator>().SetBool("isFull", false);
             anim.SetBool("isFull", false);
             Fill.GetComponent<Animator>().SetBool("isFull", false);
+            isFull = false;
         }
 
             float scaleFactor = Mathf.Lerp(0.03f, 0.25f, painMeter.value / painMeter.maxValue); //Fill'in gözüktüðü dalgalarýn boyutu için 0.02 ve 0.3 deðiþtirilebilir.
@@ -104,15 +105,25 @@ public class PainMeter : MonoBehaviour
             PercentValue.text = Mathf.RoundToInt(painMeter.value/painMeter.maxValue*100).ToString();
             
             
-            damageTakenText.text = Mathf.RoundToInt(PainMeter.Instance.painMeter.value).ToString();
+            damageTakenText.text = Mathf.RoundToInt(painMeter.value).ToString();
             maxPainText.text = painMeter.maxValue.ToString();
 
+        if(!PlayerPain.Instance.canFillPain)
+        {
+            Lock.SetActive(true);
+            Percent.SetActive(false);
+        }
+        else
+        {
+            Lock.SetActive(false);
+            Percent.SetActive(true);
+        }
 
     }
 
     private void ColorCalculate()
     {
-        if(PlayerPain.Instance.totalPain > 0 && PainMeter.Instance.painMeter.value <= PainMeter.Instance.painMeter.maxValue)  //ÖNEMLÝ!!! PAINMETER dolduktan sonra alýnan hasarlar renk karýþýmýna katýlsýn mý?!!!
+        if(PlayerPain.Instance.totalPain > 0 && painMeter.value <= painMeter.maxValue)  //ÖNEMLÝ!!! PAINMETER dolduktan sonra alýnan hasarlar renk karýþýmýna katýlsýn mý?!!!
         {
             color1 = PlayerPain.Instance.sourceDamage1 / PlayerPain.Instance.totalPain;
             color2 = PlayerPain.Instance.sourceDamage2 / PlayerPain.Instance.totalPain;

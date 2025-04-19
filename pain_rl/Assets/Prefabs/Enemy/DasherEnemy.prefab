@@ -615,7 +615,6 @@ MonoBehaviour:
   healthText: {fileID: 0}
   healthSlider: {fileID: 664410736917901401}
   FloatingHitTextPrefab: {fileID: 5467357853809653287, guid: 8056e03b5857d7743a07b016f1b52c31, type: 3}
-  FloatingHitTextPrefabDeath: {fileID: 5467357853809653287, guid: 8f991ab1062f5314b9061e33d108c62d, type: 3}
   maxHealth: 120
   currentHealth: 0
   OnHit:
@@ -683,6 +682,13 @@ MonoBehaviour:
   bow: []
   stun:
   - {fileID: 8300000, guid: a33954d03ad9f9a468dc0cb8154852af, type: 3}
+  chainProjectile: {fileID: 0}
+  chainHit: {fileID: 0}
+  chainActive: {fileID: 0}
+  chainSearchLoop: {fileID: 0}
+  chainLocked: {fileID: 0}
+  chainBreak: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &4378093999582245696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,7 +708,7 @@ MonoBehaviour:
   rayCount: 25
   coneAngle: 120
   chargeTime: 1.35
-  dashSpeedMultiplier: 15
+  dashSpeedMultiplier: 20
   stunAfterDash: 0.75
   stunAfterHitMultiplier: 3
   dashDistance: 10

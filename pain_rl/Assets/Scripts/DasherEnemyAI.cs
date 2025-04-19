@@ -100,59 +100,70 @@ public class DasherEnemyAI : MonoBehaviour
 
     void Update()
     {
-        direction = (target.position - transform.position).normalized;
-        SetDirection(direction);
-        float distance = Vector2.Distance(transform.position, target.position);
-        float stopDistance = 0.3f; // The deadzone range
+        if (GetComponent<Health>().dead == false)
+        {
+            direction = (target.position - transform.position).normalized;
+            SetDirection(direction);
+            float distance = Vector2.Distance(transform.position, target.position);
+            float stopDistance = 0.3f; // The deadzone range
 
-        if (isWandering)
-        {
-            if (distance > stopDistance) // Only update movement if outside the deadzone
-            {
-                rb.linearVelocity = direction * speed;
-                animator.SetBool("isMoving", true);
-            }
-        }
-        if(rb.linearVelocity == Vector2.zero)
-        {
-            animator.SetBool("isMoving", false);
-        }
-
-        if (CanSeePlayer(agroRange))
-        {
             if (isWandering)
             {
-                isWandering = false;
-                StopWandering();
+                if (distance > stopDistance) // Only update movement if outside the deadzone
+                {
+                    rb.linearVelocity = direction * speed;
+                    animator.SetBool("isMoving", true);
+                }
             }
-            ChasePlayer();
-        }
-
-        if (isChasing)
-        {
-
-            if (!health.healthSlider.enabled)
+            if (rb.linearVelocity == Vector2.zero)
             {
-                health.healthSlider.enabled = true;
-                health.healthSlider.gameObject.SetActive(true);
+                animator.SetBool("isMoving", false);
             }
 
-            Exclamation.SetActive(true);
+            if (CanSeePlayer(agroRange))
+            {
+                if (isWandering)
+                {
+                    isWandering = false;
+                    StopWandering();
+                }
+                ChasePlayer();
+            }
+
+            if (isChasing)
+            {
+
+                if (!health.healthSlider.enabled)
+                {
+                    health.healthSlider.enabled = true;
+                    health.healthSlider.gameObject.SetActive(true);
+                }
+
+                Exclamation.SetActive(true);
+            }
+            else
+            {
+                Exclamation.SetActive(false);
+            }
+
+
+            if (canSetTarget)
+            {
+                target.position = player.position; // Lock target position
+            }
+
+            Vector2 directionToTarget = (target.position - transform.position).normalized;
+            float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            DashIndicator.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+
         }
+
         else
         {
-            Exclamation.SetActive(false);
+            StopAllCoroutines();
         }
 
-
-        if(canSetTarget)
-        {
-            target.position = player.position; // Lock target position
-        }
-
-        Vector2 directionToTarget = (target.position - transform.position).normalized;
-        float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
-        DashIndicator.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     void FixedUpdate()

@@ -18,8 +18,9 @@ public class HitStop : MonoBehaviour
             return;
         }
 
-        Time.timeScale = 0f;
-        StartCoroutine(Wait(duration));
+            Time.timeScale = 0f;
+            StartCoroutine(Wait(duration));
+
     }
 
     IEnumerator Wait(float duration)
@@ -28,6 +29,18 @@ public class HitStop : MonoBehaviour
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
         waiting = false;
+
+    }
+
+    public void Slow(float duration)
+    {
+        if (waiting)
+        {
+            return;
+        }
+            Time.timeScale = 0.1f;
+            StartCoroutine(Wait(duration));
+
 
     }
 

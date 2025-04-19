@@ -8,6 +8,9 @@ TagManager:
   - Destructible
   - Barrel
   - SkillUI
+  - Annihilation
+  - PlayerClone
+  - PlayerSword
   layers:
   - Default
   - TransparentFX

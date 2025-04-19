@@ -1,13 +1,13 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using System.Collections;
 using System.Xml.Linq;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Sword : MonoBehaviour
 {
 
-    public static Sword instance;
 
     [Header("Values")]
     [SerializeField] public int attackDamage;
@@ -16,19 +16,19 @@ public class Sword : MonoBehaviour
     [SerializeField] public float attackCooldown;
     [SerializeField] public float critChance;
     [SerializeField] public float critDamageMultiplier;
-    [SerializeField] public float animationLength; //BUNU DEÐÝÞTÝRÝRSEN 1) FAKE SWORD YOK OLUP GERÇEÐÝ GELEN ANÝMASYONUN SÜRESÝNÝ    2) TRAIL EFFECT ANÝMASYONULARININ SÜRESÝNÝ BUNU EÞÝTLE ANÝMATÖRDE.
-    [SerializeField] public float comboResetTime; //BUNU DEÐÝÞTÝRÝRSEN SWING 1 VE 2 YAPILIRKEN PLAYERDA GÖZÜKEN ANÝMASYONUN NORMALE DÖNME SÜRESÝNÝ DE AYARLA. EÐER COMBO DEVAM EDEBÝLECEK DURUMDAYSA PLAYER DAHA GERGÝN? DURSUN KÝ COMBO NE ZAMAN BÝTTÝ ANLAÞILSIN. + FAKE SWORD IDLE'A GÝDERKEN OLAN EXIT TIMELARI DEÐÝÞTÝR.
+    [SerializeField] public float animationLength; //BUNU DEÄžÄ°ÅžTÄ°RÄ°RSEN 1) FAKE SWORD YOK OLUP GERÃ‡EÄžÄ° GELEN ANÄ°MASYONUN SÃœRESÄ°NÄ°    2) TRAIL EFFECT ANÄ°MASYONULARININ SÃœRESÄ°NÄ° BUNU EÅžÄ°TLE ANÄ°MATÃ–RDE.
+    [SerializeField] public float comboResetTime; //BUNU DEÄžÄ°ÅžTÄ°RÄ°RSEN SWING 1 VE 2 YAPILIRKEN PLAYERDA GÃ–ZÃœKEN ANÄ°MASYONUN NORMALE DÃ–NME SÃœRESÄ°NÄ° DE AYARLA. EÄžER COMBO DEVAM EDEBÄ°LECEK DURUMDAYSA PLAYER DAHA GERGÄ°N? DURSUN KÄ° COMBO NE ZAMAN BÄ°TTÄ° ANLAÅžILSIN. + FAKE SWORD IDLE'A GÄ°DERKEN OLAN EXIT TIMELARI DEÄžÄ°ÅžTÄ°R.
     [SerializeField] public float hitStopTime;
 
     [Header("3rd Hit Values")]
     [SerializeField] public float thirdHitDamageMultiplier;
     [SerializeField] public float thirdHitRangeMultiplier;
     [SerializeField] public float thirdHitAngle;
-    [SerializeField] public float maxChargeInSeconds;  //BUNU DEÐÝÞTÝRÝRSEN PLAYER CHARGE ANÝMASYONU KAÇ SANÝYE ONU DA DEÐÝÞTÝRMEN GEREKÝR. + PLAYER ATTACK'TA BU DEÐERÝN ETKÝLEDÝÐÝ HASARIN DEÐÝÞÝM HIZINI DEÐÝÞTÝRMEN GEREKÝR.
+    [SerializeField] public float maxChargeInSeconds;  //BUNU DEÄžÄ°ÅžTÄ°RÄ°RSEN PLAYER CHARGE ANÄ°MASYONU KAÃ‡ SANÄ°YE ONU DA DEÄžÄ°ÅžTÄ°RMEN GEREKÄ°R. + PLAYER ATTACK'TA BU DEÄžERÄ°N ETKÄ°LEDÄ°ÄžÄ° HASARIN DEÄžÄ°ÅžÄ°M HIZINI DEÄžÄ°ÅžTÄ°RMEN GEREKÄ°R.
     [SerializeField] public float maxChargeDamageMultiplier;
     [Space]
-    [SerializeField] public float delayBeforeThirdHit; // BUNU DEÐÝÞTÝRÝRSEN PLAYER ANÝMATÖRÜNDEKÝ!!! (sword deðil) SWORDATTACK3 ANÝMASYONUNUN DELAY GÖSTERMELÝK ÝLK KISMINI DA OYNATMAN GEREKÝR!
-    [SerializeField] public float delayAfterThirdHit; // YENÝ KOMBO BAÞLATABÝLMEK ÝÇÝN GEREKLÝ SÜRE. bi üstteki animasyonunun aynýsýnýn son kýsmýný deðiþtirmen gerekir.
+    [SerializeField] public float delayBeforeThirdHit; // BUNU DEÄžÄ°ÅžTÄ°RÄ°RSEN PLAYER ANÄ°MATÃ–RÃœNDEKÄ°!!! (sword deÄŸil) SWORDATTACK3 ANÄ°MASYONUNUN DELAY GÃ–STERMELÄ°K Ä°LK KISMINI DA OYNATMAN GEREKÄ°R!
+    [SerializeField] public float delayAfterThirdHit; // YENÄ° KOMBO BAÅžLATABÄ°LMEK Ä°Ã‡Ä°N GEREKLÄ° SÃœRE. bi Ã¼stteki animasyonunun aynÄ±sÄ±nÄ±n son kÄ±smÄ±nÄ± deÄŸiÅŸtirmen gerekir.
     [SerializeField] public float thirdHitAnimLength;
     [SerializeField] public float thirdHitStopTime;
 
@@ -60,11 +60,9 @@ public class Sword : MonoBehaviour
     public Vector2 chargeDir;
     private int lastQuadrant = -1;
     private const float quadrantChangeThreshold = 15f;
+    public bool chargeInterrupt;
 
-    private void Awake()
-    {
-        instance = this;
-    }
+
 
     private void Update()
     {
@@ -72,9 +70,9 @@ public class Sword : MonoBehaviour
         attackInt = PlayerAttack.Instance.attackInt;
         swordAnimator.SetInteger("attackInt", attackInt);
 
-        if(attackInt == 3)
+        if (attackInt == 3)
         {
-            if(!changedValues)
+            if (!changedValues)
             {
                 StartCoroutine(WaitToChangeValues());
             }
@@ -107,7 +105,7 @@ public class Sword : MonoBehaviour
             }
         }
 
-        if (isCharging && Input.GetMouseButtonUp(0))
+        if (isCharging && Input.GetMouseButtonUp(0) || isCharging && chargeInterrupt)
         {
             StartCoroutine(ThirdAttack());
             PlayerAttack.Instance.coroutineStarted = false;
@@ -120,7 +118,7 @@ public class Sword : MonoBehaviour
             PlayerAttack.Instance.attackObjectAnimator.SetBool("chargeFull", true);
             PlayerAttack.Instance.maxText.GetComponent<Animator>().SetBool("chargeFull", true);
             PlayerAttack.Instance.chargeSlider.SetActive(false);
-            if(!hasPlayedSound)
+            if (!hasPlayedSound)
             {
                 hasPlayedSound = true;
                 PowerChargeMAX();
@@ -134,7 +132,7 @@ public class Sword : MonoBehaviour
         }
 
 
-        if(isCharging)
+        if (isCharging)
         {
             Vector2 playerPos = (Vector2)PlayerAttack.Instance.Player.transform.position;
             Vector2 mousePos = (Vector2)Input.mousePosition;
@@ -190,8 +188,11 @@ public class Sword : MonoBehaviour
 
     public void SwordAttack()
     {
+        PlayerAttack.OnPlayerAttacked?.Invoke(attackInt);
+
         PlayerAttack.Instance.canAttack = false;
         PlayerAttack.Instance.isAttacking = true;
+        PlayerAttack.Instance.isIdle = false;
 
         // Ensure AttackReset always runs to completion
         if (PlayerAttack.Instance.attackTimer != null)
@@ -215,10 +216,6 @@ public class Sword : MonoBehaviour
         switch (PlayerAttack.Instance.attackInt)
         {
             case 1:
-                if (PlayerAttack.Instance.canCombo)
-                {
-                    PlayerAttack.Instance.attackInt = 2;
-                }
                 PlayerAttack.Instance.attackObjectParent.rotation = Quaternion.Euler(0, 0, minAngle);
                 PlayerAttack.Instance.attackObjectParent.DORotate(new Vector3(0, 0, maxAngle), animationLength).SetEase(Ease.OutExpo);
                 PlayerAttack.Instance.attackObjectAnimator.SetTrigger("Swing1");
@@ -226,13 +223,13 @@ public class Sword : MonoBehaviour
                 NormalSwing();
                 PlayerAttack.Instance.anim.SetInteger("Direction", PlayerAttack.Instance.GetMouseQuadrant(attackDir));
                 PlayerAttack.Instance.anim.SetTrigger("Attack1+2");
+                if (PlayerAttack.Instance.canCombo)
+                {
+                    PlayerAttack.Instance.attackInt = 2;
+                }
                 break;
 
             case 2:
-                if (PlayerAttack.Instance.canCombo)
-                {
-                    PlayerAttack.Instance.attackInt = 3;
-                }
                 PlayerAttack.Instance.attackObjectParent.rotation = Quaternion.Euler(0, 0, maxAngle);
                 PlayerAttack.Instance.attackObjectParent.DORotate(new Vector3(0, 0, minAngle), animationLength).SetEase(Ease.OutExpo);
                 PlayerAttack.Instance.attackObjectAnimator.SetTrigger("Swing2");
@@ -240,6 +237,10 @@ public class Sword : MonoBehaviour
                 PlayerAttack.Instance.anim.SetInteger("Direction", PlayerAttack.Instance.GetMouseQuadrant(attackDir));
                 NormalSwing();
                 PlayerAttack.Instance.anim.SetTrigger("Attack1+2");
+                if (PlayerAttack.Instance.canCombo)
+                {
+                    PlayerAttack.Instance.attackInt = 3;
+                }
                 break;
         }
     }
@@ -288,32 +289,27 @@ public class Sword : MonoBehaviour
             impactEffectToShow = impactEffect;
         }
 
-        float chargeTimeMultiplier = Mathf.Lerp(1f, maxChargeDamageMultiplier, PlayerAttack.Instance.elapsedChargeTime / PlayerAttack.Instance.maxCharge); //LINEAR BÝR ARTIÞ VAR, SQRT KULLANILMADI.
+        float chargeTimeMultiplier = Mathf.Lerp(1f, maxChargeDamageMultiplier, PlayerAttack.Instance.elapsedChargeTime / PlayerAttack.Instance.maxCharge); //LINEAR BÄ°R ARTIÅž VAR, SQRT KULLANILMADI.
 
 
-        //rengi etkileyen deðiþkenler : - crit attýk mý atmadýk mý?    - üçüncü vuruþta mýyýz deðil miyiz? 
-        //rengi etkilemeyen deðiþkenler : - pain ile gelen damage boost ne kadar fazla?
+        //rengi etkileyen deÄŸiÅŸkenler : - crit attÄ±k mÄ± atmadÄ±k mÄ±?    - Ã¼Ã§Ã¼ncÃ¼ vuruÅŸta mÄ±yÄ±z deÄŸil miyiz? 
+        //rengi etkilemeyen deÄŸiÅŸkenler : - pain ile gelen damage boost ne kadar fazla?
         int damageThatEffectsTheColors = Mathf.RoundToInt(attackDamage * critMultiply * PlayerAttack.Instance.damageMultiplierWeapon * chargeTimeMultiplier);
         int damageToDeal = Mathf.RoundToInt(damageThatEffectsTheColors * damageMultiplierPain);
 
 
 
 
-        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(PlayerAttack.Instance.attackPoint.position, attackRange);
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(PlayerAttack.Instance.attackPoint.position, PlayerAttack.Instance.attackRange);
+
 
         foreach (Collider2D objects in hitObjects)
         {
             Vector2 objectsDir = (objects.transform.position - PlayerAttack.Instance.attackPoint.position).normalized;
-            float objectAngle = Mathf.Atan2(objectsDir.y, objectsDir.x) * Mathf.Rad2Deg;
+            float angleBetween = Vector2.SignedAngle(attackDir, objectsDir);
+            
+            bool inAttackCone = Mathf.Abs(angleBetween) <= PlayerAttack.Instance.attackAngle / 2f;
 
-            // Fix for large angles (handles full 360°)
-            float adjustedMin = (minAngle + 360) % 360;
-            float adjustedMax = (maxAngle + 360) % 360;
-            float adjustedObjAngle = (objectAngle + 360) % 360;
-
-            bool inAttackCone = (adjustedMin < adjustedMax)
-                ? (adjustedObjAngle >= adjustedMin && adjustedObjAngle <= adjustedMax)
-                : (adjustedObjAngle >= adjustedMin || adjustedObjAngle <= adjustedMax);
 
             if (inAttackCone)
             {
@@ -321,7 +317,7 @@ public class Sword : MonoBehaviour
                 {
                     objects.GetComponent<Health>().Hit(damageToDeal, 0);
                     GameObject effect = Instantiate(impactEffectToShow, objects.transform.position,
-                        Quaternion.Euler(0, 0, objectAngle));
+                        Quaternion.Euler(0, 0, 0));
                     Destroy(effect, 1f);
                     HitStop.Instance.Stop(hitStopTime);
                     CameraFollow.Instance.TriggerShake(0.24f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.5f * PlayerAttack.Instance.powerfulShakeMultiplier);
@@ -339,7 +335,7 @@ public class Sword : MonoBehaviour
                         objects.GetComponent<Health>().lastHitTakenWasCrit = false;
                     }
 
-                   
+
                 }
 
 
@@ -348,7 +344,7 @@ public class Sword : MonoBehaviour
                     objects.GetComponent<Health>().Hit(damageToDeal, 0);
                     objects.GetComponent<EntitySFX>().BarrelHitSFX();
                     GameObject effect = Instantiate(impactEffectToShow, objects.transform.position,
-                        Quaternion.Euler(0, 0, objectAngle));
+                        Quaternion.Euler(0, 0, 0));
                     Destroy(effect, 1f);
                     HitStop.Instance.Stop(hitStopTime);
                     CameraFollow.Instance.TriggerShake(0.24f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.5f * PlayerAttack.Instance.powerfulShakeMultiplier);
@@ -376,6 +372,7 @@ public class Sword : MonoBehaviour
 
     private IEnumerator ThirdAttack()
     {
+        PlayerAttack.OnPlayerAttacked?.Invoke(attackInt);
         PlayerAttack.Instance.canAttack = false;
         PlayerAttack.Instance.isAttacking = true;
         isCharging = false;
@@ -392,9 +389,9 @@ public class Sword : MonoBehaviour
         mousePos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane));
         attackDir = (mousePos - playerPos).normalized;
         float centerAngle = Mathf.Atan2(attackDir.y, attackDir.x) * Mathf.Rad2Deg;
-        float minAngle = centerAngle - (attackAngle / 2);
-        float maxAngle = centerAngle + (attackAngle / 2);
-        float angleDiff = maxAngle - minAngle;
+        float arc = PlayerAttack.Instance.attackAngle;
+        float minAngle = centerAngle - arc / 2f;
+        float maxAngle = centerAngle + arc / 2f;
         PlayerAttack.Instance.lockedAttackDir = attackDir;
 
 
@@ -403,7 +400,9 @@ public class Sword : MonoBehaviour
         //yield return new WaitForSeconds(swordScript.delayBeforeThirdHit);
 
         PlayerAttack.Instance.attackObjectParent.rotation = Quaternion.Euler(0, 0, minAngle);
-        PlayerAttack.Instance.attackObjectParent.DORotate(new Vector3(0, 0, minAngle + angleDiff),thirdHitAnimLength).SetEase(Ease.OutExpo);
+        PlayerAttack.Instance.attackObjectParent
+            .DORotate(new Vector3(0, 0, maxAngle), thirdHitAnimLength)
+            .SetEase(Ease.OutExpo);
         PlayerAttack.Instance.attackObjectAnimator.SetTrigger("Swing3");
 
         StartCoroutine(SwordTurn());
@@ -420,9 +419,10 @@ public class Sword : MonoBehaviour
 
     private IEnumerator AttackResetForThree()
     {
-        yield return new WaitForSeconds(thirdHitAnimLength); //attack cooldown yerine bunu kullandýk, animasyon uzunluðunda attack cooldown olmuþ oldu. attack cooldown çok hýzlý deðiþtiðinde algýlanamýyordu? ANÝMASYON ÝPTALÝ HATALARI BURADAN KAYNAKLANIYOR DÝKKAT! 1-2-3-1-2-3 deðil 1-2-3-1-1-2 gibi
+        yield return new WaitForSeconds(thirdHitAnimLength); //attack cooldown yerine bunu kullandÄ±k, animasyon uzunluÄŸunda attack cooldown olmuÅŸ oldu. attack cooldown Ã§ok hÄ±zlÄ± deÄŸiÅŸtiÄŸinde algÄ±lanamÄ±yordu? ANÄ°MASYON Ä°PTALÄ° HATALARI BURADAN KAYNAKLANIYOR DÄ°KKAT! 1-2-3-1-2-3 deÄŸil 1-2-3-1-1-2 gibi
         PlayerAttack.Instance.attackInt = 1;
         PlayerAttack.Instance.attackObjectAnimator.SetTrigger("idle");
+        PlayerAttack.Instance.isIdle = true;
         PlayerAttack.Instance.canAttack = true;
     }
 

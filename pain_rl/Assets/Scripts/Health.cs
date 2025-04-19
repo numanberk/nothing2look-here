@@ -25,13 +25,18 @@ public class Health : MonoBehaviour
     private ChainOnEnemy chain;
     private int lastHitTaken;
     public bool lastHitTakenWasCrit;
-    private bool dead = false;
+    public bool dead = false;
     private Animator anim;
     private PlayerPain playerPain;
     public Canvas canvas;
     public RectTransform canvasRT;
     private bool originalHit;
     private GameObject sprites;
+    private GameObject canvasHP;
+    private GameObject canvasExclamation;
+    private ChaserEnemyAI enemyAI1;
+    private ShooterEnemyAI enemyAI2;
+    private DasherEnemyAI enemyAI3;
 
     private void Start()
     {
@@ -48,7 +53,13 @@ public class Health : MonoBehaviour
         if (canvas != null)
         {
             canvasRT = canvas.gameObject.GetComponent<RectTransform>();
+            canvasHP = canvas.transform.Find("HealthSlider")?.gameObject;
+            canvasExclamation = canvas.transform.Find("!!!")?.gameObject;
         }
+
+        enemyAI1 = GetComponent<ChaserEnemyAI>();
+        enemyAI2 = GetComponent<ShooterEnemyAI>();
+        enemyAI3 = GetComponent<DasherEnemyAI>();
 
 
 
@@ -93,6 +104,22 @@ public class Health : MonoBehaviour
         }
         //GEÇÝCÝ KOD//
 
+        if(dead)
+        {
+            var rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+            }
+
+            if(chain != null)
+            {
+                ChainSkill.instance.RemoveObject(this.gameObject);
+                Destroy(chain.gameObject);
+            }
+
+        }
+
     }
 
     public void Hit(int damage, int source)
@@ -123,9 +150,9 @@ public class Health : MonoBehaviour
 
 
 
-        if (source != -1) //-1, düþmanlarýn kendine sektirmesi için olan source kodu.
+        if (source != -1 && chain != null) //-1, düþmanlarýn kendine sektirmesi için olan source kodu.
         {
-            StartCoroutine(CheckChain(damage));
+            chain.skill.DamageDistribution(damage, this.gameObject);
         }
 
 
@@ -133,7 +160,7 @@ public class Health : MonoBehaviour
 
 
         //SADECE PLAYER VARSA GEÇERLÝ - playerPain assignlanmýþ olmalý!!!
-        if (playerPain != null && currentHealth > 0 && PainMeter.Instance.painMeter.value != PainMeter.Instance.painMeter.maxValue)
+        if (playerPain != null && currentHealth > 0 && !PainMeter.Instance.isFull && playerPain.canFillPain)
         {
 
             if (source == 1)
@@ -152,6 +179,7 @@ public class Health : MonoBehaviour
             }
 
             PainMeter.Instance.Container_INT.GetComponent<Animator>().SetTrigger("Filling");
+            playerPain.latestSource = source;
 
         }
 
@@ -211,7 +239,6 @@ public class Health : MonoBehaviour
 
     public void PlayerDie(GameObject _gameObject)
     {
-        Debug.Log("öldü.");
         EventManager.Instance.isPlayerDead = true;
         Destroy(_gameObject);
     }
@@ -233,7 +260,6 @@ public class Health : MonoBehaviour
     IEnumerator Destroyer(GameObject go)
     {
 
-
         SpriteRenderer[] sr = GetComponentsInChildren<SpriteRenderer>();
         foreach (var c in sr)
         {
@@ -243,13 +269,6 @@ public class Health : MonoBehaviour
         if (sprites != null)
         {
             sprites.SetActive(false);
-        }
-
-
-        var rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
         }
 
         var collider = GetComponent<CircleCollider2D>();
@@ -264,12 +283,40 @@ public class Health : MonoBehaviour
             collider2.enabled = false;
         }
 
-        if (canvas != null)
+        var audiosource = GetComponent<AudioSource>();
+        if(audiosource != null)
         {
-            canvas.enabled = false;
+            audiosource.enabled = false;
         }
 
-        yield return new WaitForSeconds(0.018f);
+        if(healthSlider != null)
+        {
+            healthSlider.enabled = false;
+        }
+
+        if(canvas != null)
+        {
+            Destroy(canvasHP);
+            Destroy(canvasExclamation);
+
+            if (enemyAI3 != null)
+            {
+                Destroy(enemyAI3.Stun);
+            }
+        }
+
+
+
+        yield return new WaitForSeconds(0.15f);
+
+        if(chain != null)
+        {
+            ChainSkill.instance.RemoveObject(this.gameObject);
+            Destroy(chain);
+        }
+
+
+        yield return new WaitForSeconds(1f);
 
         Destroy(go);
     }

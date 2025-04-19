@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
@@ -5,6 +6,7 @@ using UnityEngine;
 
 public class ChainSkill : MonoBehaviour
 {
+    public static ChainSkill instance;
 
     [Header("Values Projectile")]
     [SerializeField] private float chainProjectileSpeed;
@@ -22,6 +24,8 @@ public class ChainSkill : MonoBehaviour
     [SerializeField] public GameObject ChainOnEnemyPrefab;
     [SerializeField] public GameObject ChainParticlePurple;
     [SerializeField] public GameObject ChainParticleGreen;
+    [SerializeField] public GameObject ChainF1UIPrefab;
+    [SerializeField] private float attackDelay;
 
     [Header("DONT TOUCH")]
     public GameObject latestChain;
@@ -30,16 +34,24 @@ public class ChainSkill : MonoBehaviour
     public List<GameObject> chainedList = new List<GameObject>(); //LÝSTEDE BULUNAN DÜÞMANLARA NE OLACAK? (VURULAN KENDÝSÝ HASARIN %100'ÜNÜ ALIRKEN DÝÐERLERÝ BÖLÜÞECEK MÝ VS.)??? - ayarlandý. (distribution())
     public List<GameObject> allChainsList = new List<GameObject>();
     public GameObject skillUI;
+    public GameObject skillInfos;
     private EntitySFX entitySFX;
+    private bool inAttackCooldown = false;
+    private GameObject Player;
 
     private void Awake()
     {
+        instance = this;
         entitySFX = GetComponent<EntitySFX>();
     }
     private void Start()                                                                                        
     {
         skillUI = GameObject.Find("SkillsUI");
+        skillInfos = GameObject.Find("Skill Infos");
         skillManager = GetComponent<SkillManager>();
+        skillManager.requirementsMetForSkill = true;
+        skillManager.endableSkill = true;
+        Player = GameObject.Find("Player");
     }
 
     private void Update()
@@ -62,10 +74,18 @@ public class ChainSkill : MonoBehaviour
             skillManager.other.SetActive(false);
         }
 
+        if(inAttackCooldown)
+        {
+            PlayerAttack.Instance.canAttack = false;
+        }
+
+
     }
     public void SkillGo()
     {
-        Debug.Log("Skill Used!");
+        //anim yap, anim uzunluðunu da attackDelay'e eþitle.
+        StartCoroutine(AttackCooldown());
+
         skillManager.canGoToCooldown = false;
         skillManager.isRunning = true;
 
@@ -234,6 +254,11 @@ public class ChainSkill : MonoBehaviour
         newUI.transform.localPosition = Vector3.zero; // Adjust if necessary
         skillManager.SpawnedUI = true;
         skillManager.currentUI = newUI;
+
+        GameObject newF1 = Instantiate(ChainF1UIPrefab, skillInfos.transform);
+        newF1.transform.localPosition = Vector3.zero;
+        skillManager.SpawnedF1 = true;
+        skillManager.currentF1 = newF1;
     }
 
     private void GreenCheck()
@@ -258,6 +283,22 @@ public class ChainSkill : MonoBehaviour
             skillManager.keybind.enabled = !everyoneGreen;
         }
 
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        inAttackCooldown = true;
+        StartCoroutine(ChargeInterrupt());
+        yield return new WaitForSeconds(attackDelay);
+        inAttackCooldown = false;
+        PlayerAttack.Instance.canAttack = true;
+    }
+
+    IEnumerator ChargeInterrupt()
+    {
+        Player.GetComponentInChildren<Sword>().chargeInterrupt = true;
+        yield return new WaitForSeconds(0.018f);
+        Player.GetComponentInChildren<Sword>().chargeInterrupt = false;
     }
 
 

@@ -17,14 +17,22 @@ public class SkillManager : MonoBehaviour
     public GameObject Player;
     private float elapsedTime;
     public bool SpawnedUI = false;
+    public bool SpawnedF1 = false;
     public bool canUseSkill;
     public bool canGoToCooldown;
     public bool isRunning;
     public bool isInCooldown;
     public GameObject currentUI;
+    public GameObject currentF1;
     public TextMeshProUGUI keybind;
-    private TextMeshProUGUI timer;
+    public TextMeshProUGUI keybindF1;
+    public TextMeshProUGUI timer;
+    private TextMeshProUGUI cooldown;
+    public TextMeshProUGUI secondary;
     public GameObject other;
+    public GameObject other2;
+    public bool requirementsMetForSkill;
+    public bool endableSkill;
 
 
     private void Start()
@@ -75,19 +83,19 @@ public class SkillManager : MonoBehaviour
 
         if (Input.GetKeyDown(skillButton))
         {
-            if(canUseSkill)
+            if(canUseSkill && requirementsMetForSkill)
             {
                 UseSkill?.Invoke();
                 elapsedTime = 0f;
                 canUseSkill = false;
             }
-            else if(isRunning && !canUseSkill)
+            else if(isRunning && !canUseSkill && endableSkill)
             {
                 EndSkill?.Invoke();
             }
             else
             {
-                Debug.Log("Skill is on cooldown.");
+                Debug.Log("Skill can't be used.");
             }
             
         }
@@ -108,10 +116,44 @@ public class SkillManager : MonoBehaviour
             if (isInCooldown)
             {
                 animUI.SetBool("isInCooldown", true);
+                if (timer != null)
+                {
+                    timer.enabled = true;
+                }
+                if (keybind != null && keybind.enabled == false)
+                {
+                    keybind.enabled = true;
+                }
             }
             else if (!isInCooldown)
             {
                 animUI.SetBool("isInCooldown", false);
+                if(keybind != null && keybind.enabled == false)
+                {
+                    keybind.enabled = true;
+                }
+            }
+
+            if(!requirementsMetForSkill)
+            {
+                if(!isRunning)
+                {
+                    animUI.SetBool("isInCooldown", true);
+                    if (timer != null && keybind != null)
+                    {
+                        if (timer.enabled == true)
+                        {
+                            timer.enabled = false;
+                        }
+                        if (keybind.enabled == true)
+                        {
+                            keybind.enabled = false;
+                        }
+
+                    }
+                }
+
+                
             }
 
             if (keybind == null)
@@ -124,10 +166,33 @@ public class SkillManager : MonoBehaviour
                 timer = currentUI.transform.Find("CooldownTimer")?.GetComponent<TextMeshProUGUI>();
             }
 
+           
             if(other == null)
             {
                 other = currentUI.transform.Find("Other")?.gameObject;
             }
+
+            if (other2 == null)
+            {
+                GameObject parent = currentUI.transform.Find("Images").gameObject;
+                other2 = parent.transform.Find("Other2").gameObject;
+            }
+
+            if (keybindF1 == null)
+            {
+                keybindF1 = currentF1.transform.Find("Keybind")?.GetComponent<TextMeshProUGUI>();
+            }
+
+            if (cooldown == null)
+            {
+                cooldown = currentF1.transform.Find("Cooldown")?.GetComponent<TextMeshProUGUI>();
+            }
+
+            if (secondary == null)
+            {
+                secondary = currentF1.transform.Find("SecondaryStat")?.GetComponent<TextMeshProUGUI>();
+            }
+
         }
 
 
@@ -138,9 +203,19 @@ public class SkillManager : MonoBehaviour
             keybind.text = skillButton.ToString();
         }
 
+        if(keybindF1 != null)
+        {
+            keybindF1.text = skillButton.ToString();
+        }
+
         if(timer != null)
         {
             timer.text = Mathf.RoundToInt(skillCooldown - elapsedTime).ToString();
+        }
+
+        if(cooldown != null)
+        {
+            cooldown.text = (skillCooldown.ToString() + "s");
         }
 
 
@@ -150,6 +225,11 @@ public class SkillManager : MonoBehaviour
     {
         isRunning = false;
         canGoToCooldown = true;
-        keybind.enabled = true;
+        elapsedTime = 0f;
+        if(keybind != enabled)
+        {
+            keybind.enabled = true;
+        }
+       
     }
 }

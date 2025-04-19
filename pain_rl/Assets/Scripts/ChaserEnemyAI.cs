@@ -75,68 +75,77 @@ public class ChaserEnemyAI : MonoBehaviour
 
     void Update()
     {
-        direction = (target.position - transform.position).normalized;
-        SetDirection(direction);
-        float distance = Vector2.Distance(transform.position, target.position);
-        float stopDistance = 0.3f; // The deadzone range
-
-        if (isChasing || isWandering)
+        if(GetComponent<Health>().dead == false)
         {
-            if (distance > stopDistance) // Only update movement if outside the deadzone
+            direction = (target.position - transform.position).normalized;
+            SetDirection(direction);
+            float distance = Vector2.Distance(transform.position, target.position);
+            float stopDistance = 0.3f; // The deadzone range
+
+            if (isChasing || isWandering)
             {
-                rb.linearVelocity = direction * speed;
-                animator.SetBool("isMoving", true);
+                if (distance > stopDistance) // Only update movement if outside the deadzone
+                {
+                    rb.linearVelocity = direction * speed;
+                    animator.SetBool("isMoving", true);
+                }
+                else // If within the deadzone, stop moving
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    animator.SetBool("isMoving", false);
+                }
             }
-            else // If within the deadzone, stop moving
+            else
             {
                 rb.linearVelocity = Vector2.zero;
                 animator.SetBool("isMoving", false);
             }
-        }
-        else
-        {
-            rb.linearVelocity = Vector2.zero;
-            animator.SetBool("isMoving", false);
-        }
 
-        if (CanSeePlayer(agroRange))
-        {
-            if (isWandering)
+            if (CanSeePlayer(agroRange))
             {
-                isWandering = false;
-                StopWandering();
+                if (isWandering)
+                {
+                    isWandering = false;
+                    StopWandering();
+                }
+                ChasePlayer();
             }
-            ChasePlayer();
-        }
-        else
-        {
-            if (chaseTimer == null)
+            else
             {
-                chaseTimer = StartCoroutine(StopChasingTimer());
+                if (chaseTimer == null)
+                {
+                    chaseTimer = StartCoroutine(StopChasingTimer());
+                }
+                if (isChasing)
+                {
+                    ContinueChase();
+                    Exclamation.GetComponent<Animator>().SetBool("fading", true);
+                }
             }
+
             if (isChasing)
             {
-                ContinueChase();
-                Exclamation.GetComponent<Animator>().SetBool("fading", true);
+                speed = baseSpeed * chaseSpeedMultiplier;
+
+                if (!health.healthSlider.enabled)
+                {
+                    health.healthSlider.enabled = true;
+                    health.healthSlider.gameObject.SetActive(true);
+                }
+
+                Exclamation.SetActive(true);
             }
-        }
-
-        if (isChasing)
-        {
-            speed = baseSpeed * chaseSpeedMultiplier;
-
-            if (!health.healthSlider.enabled)
+            else
             {
-                health.healthSlider.enabled = true;
-                health.healthSlider.gameObject.SetActive(true);
+                speed = baseSpeed;
+                Exclamation.SetActive(false);
             }
-
-            Exclamation.SetActive(true);
         }
+
+
         else
         {
-            speed = baseSpeed;
-            Exclamation.SetActive(false);
+            StopAllCoroutines();
         }
 
     }
@@ -168,7 +177,10 @@ public class ChaserEnemyAI : MonoBehaviour
                 StartCoroutine(ExclamationDelay());
             }
 
-            Exclamation.GetComponent<Animator>().SetBool("fading", false);
+            if (Exclamation != null)
+            {
+                Exclamation.GetComponent<Animator>().SetBool("fading", false);
+            }
         }
     }
 

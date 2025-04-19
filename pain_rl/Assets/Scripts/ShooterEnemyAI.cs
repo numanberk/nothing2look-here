@@ -85,84 +85,93 @@ public class ShooterEnemyAI : MonoBehaviour
 
     void Update()
     {
-        direction = (target.position - transform.position).normalized;
-        SetDirection(direction);
-        float distance = Vector2.Distance(transform.position, target.position);
-        float stopDistance = 0.3f; // The deadzone range
+        if (GetComponent<Health>().dead == false)
+        {
+            direction = (target.position - transform.position).normalized;
+            SetDirection(direction);
+            float distance = Vector2.Distance(transform.position, target.position);
+            float stopDistance = 0.3f; // The deadzone range
 
-        // For chasing, stop moving if within attackDistance.
-        if (isChasing)
-        {
-            if (distance > attackDistance)
-            {
-                direction = (target.position - transform.position).normalized;
-                rb.linearVelocity = direction * speed;
-                animator.SetBool("isMoving", true);
-            }
-            else
-            {
-                rb.linearVelocity = Vector2.zero;
-                animator.SetBool("isMoving", false);
-            }
-        }
-        else if (isWandering)
-        {
-            if (distance > stopDistance)
-            {
-                direction = (target.position - transform.position).normalized;
-                rb.linearVelocity = direction * speed;
-                animator.SetBool("isMoving", true);
-            }
-            else
-            {
-                rb.linearVelocity = Vector2.zero;
-                animator.SetBool("isMoving", false);
-            }
-        }
-        else
-        {
-            rb.linearVelocity = Vector2.zero;
-            animator.SetBool("isMoving", false);
-        }
-
-        if (CanSeePlayer(agroRange))
-        {
-            if (isWandering)
-            {
-                isWandering = false;
-                StopWandering();
-            }
-            ChasePlayerr();
-        }
-        else
-        {
-            if (chaseTimer == null)
-            {
-                chaseTimer = StartCoroutine(StopChasingTimer());
-            }
+            // For chasing, stop moving if within attackDistance.
             if (isChasing)
             {
-                ContinueChase();
-                Exclamation.GetComponent<Animator>().SetBool("fading", true);
+                if (distance > attackDistance)
+                {
+                    direction = (target.position - transform.position).normalized;
+                    rb.linearVelocity = direction * speed;
+                    animator.SetBool("isMoving", true);
+                }
+                else
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    animator.SetBool("isMoving", false);
+                }
             }
-        }
-
-        if (isChasing)
-        {
-            speed = baseSpeed * chaseSpeedMultiplier;
-
-            if (!health.healthSlider.enabled)
+            else if (isWandering)
             {
-                health.healthSlider.enabled = true;
-                health.healthSlider.gameObject.SetActive(true);
+                if (distance > stopDistance)
+                {
+                    direction = (target.position - transform.position).normalized;
+                    rb.linearVelocity = direction * speed;
+                    animator.SetBool("isMoving", true);
+                }
+                else
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    animator.SetBool("isMoving", false);
+                }
             }
-            Exclamation.SetActive(true);
+            else
+            {
+                rb.linearVelocity = Vector2.zero;
+                animator.SetBool("isMoving", false);
+            }
+
+            if (CanSeePlayer(agroRange))
+            {
+                if (isWandering)
+                {
+                    isWandering = false;
+                    StopWandering();
+                }
+                ChasePlayerr();
+            }
+            else
+            {
+                if (chaseTimer == null)
+                {
+                    chaseTimer = StartCoroutine(StopChasingTimer());
+                }
+                if (isChasing)
+                {
+                    ContinueChase();
+                    Exclamation.GetComponent<Animator>().SetBool("fading", true);
+                }
+            }
+
+            if (isChasing)
+            {
+                speed = baseSpeed * chaseSpeedMultiplier;
+
+                if (!health.healthSlider.enabled)
+                {
+                    health.healthSlider.enabled = true;
+                    health.healthSlider.gameObject.SetActive(true);
+                }
+                Exclamation.SetActive(true);
+            }
+            else
+            {
+                speed = baseSpeed;
+                Exclamation.SetActive(false);
+            }
         }
+
         else
         {
-            speed = baseSpeed;
-            Exclamation.SetActive(false);
+            StopAllCoroutines();
         }
+        
     }
 
 
@@ -212,7 +221,11 @@ public class ShooterEnemyAI : MonoBehaviour
                 StartCoroutine(ExclamationDelay());
             }
 
-            Exclamation.GetComponent<Animator>().SetBool("fading", false);
+            if(Exclamation != null)
+            {
+                Exclamation.GetComponent<Animator>().SetBool("fading", false);
+            }
+            
         }
     }
 

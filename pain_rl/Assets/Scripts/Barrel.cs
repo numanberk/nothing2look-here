@@ -15,12 +15,21 @@ public class Barrel : MonoBehaviour
 
     public void EnableSlider()
     {
-        if(health.healthSlider.enabled == false && !firstHit)
+        // Only run this once
+        if (!firstHit)
         {
-            health.healthSlider.enabled = true;
-            health.healthSlider.gameObject.SetActive(true);
             firstHit = true;
-        }
 
+            // Only enable if slider is still alive
+            if (health != null && health.healthSlider != null)
+            {
+                health.healthSlider.enabled = true;
+                health.healthSlider.gameObject.SetActive(true);
+            }
+        }
     }
+
+
+
+
 }
