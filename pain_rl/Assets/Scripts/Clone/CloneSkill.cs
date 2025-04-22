@@ -12,6 +12,7 @@ public class CloneSkill : MonoBehaviour
     [Header("ASSIGN")]
     [SerializeField] GameObject CloneSkillUIPrefab;
     [SerializeField] GameObject CloneF1UIPrefab;
+    [SerializeField] GameObject CloneCanvasSlider;
 
     private SkillManager skillManager;
     private EntitySFX entitySFX;
@@ -21,6 +22,7 @@ public class CloneSkill : MonoBehaviour
     private GameObject currentClone;
     private bool firstTime;
     private Slider slider;
+    private GameObject sliderCloneCanvas;
     private float elapsedTime;
 
     private void Awake()
@@ -58,17 +60,19 @@ public class CloneSkill : MonoBehaviour
 
     public void SkillStart()
     {
-        skillManager.isRunning = true;
-        skillManager.canGoToCooldown = false;
-        skillManager.requirementsMetForSkill = false; //UI iyi gözüksün diye, clone süresi bitince true'la ikisini de.
-        
+        StartCoroutine(WaitUntilNotAttackingAndStart());
 
-        InstantiateClone();
+        //skillManager.canGoToCooldown = false;
+        //skillManager.isRunning = true;
+        //skillManager.requirementsMetForSkill = false;
+        //InstantiateClone();
+
     }
 
-    private void InstantiateClone()
+
+    private void InstantiateClone() //SES BUGUNU DÜZELT, CHARGE SFX SESÝ ÇIKIYOR. ONUN YERÝNE AUDÝOSOURCE KALDIR, KENDÝN EKLE, YENÝ SFX VER.
     {
-        GameObject player = Player; // or however you reference them
+        GameObject player = Player;
         GameObject clone = Instantiate(player, player.transform.position, player.transform.rotation);
         clone.tag = "PlayerClone";
 
@@ -79,7 +83,7 @@ public class CloneSkill : MonoBehaviour
 
 
         Sword originalSword = player.GetComponentInChildren<Sword>();
-        GameObject swordHolder = clone.GetComponentInChildren<Sword>().gameObject; // or whatever it's called
+        GameObject swordHolder = clone.GetComponentInChildren<Sword>().gameObject;
 
         DestroyImmediate(clone.GetComponentInChildren<Sword>());
         DestroyImmediate(clone.GetComponent<PlayerAttack>());
@@ -87,7 +91,9 @@ public class CloneSkill : MonoBehaviour
         
         CloneSword cloneSword = swordHolder.gameObject.AddComponent<CloneSword>();
         cloneSword.SetupFromSword(originalSword);
-        Transform cloneAttackPoint = clone.transform.Find("AttackPoint"); // or use any accurate path
+        Transform cloneAttackPoint = clone.transform.Find("AttackPoint");
+        Transform cloneCanvas = clone.transform.Find("Canvas");
+        sliderCloneCanvas = Instantiate(CloneCanvasSlider, cloneCanvas.transform);
         cloneSword.attackPoint = cloneAttackPoint;
 
 
@@ -128,6 +134,7 @@ public class CloneSkill : MonoBehaviour
                 slider = skillManager.other2.GetComponent<Slider>();
                 float timeLeft = lifetime - elapsedTime;
                 slider.value = timeLeft / lifetime;
+                sliderCloneCanvas.GetComponent<Slider>().value = slider.value;
             }
 
             yield return null;
@@ -148,5 +155,32 @@ public class CloneSkill : MonoBehaviour
             firstTime = false;
             skillManager.secondary.text = (lifetime.ToString() + "s");
         }
+    }
+
+    private IEnumerator WaitUntilNotAttackingAndStart()
+    {
+
+        skillManager.canGoToCooldown = false;
+        skillManager.isRunning = true;
+        skillManager.requirementsMetForSkill = false;
+
+        if (!PlayerAttack.Instance.isAttacking && !PlayerAttack.Instance.isCharging)
+        {
+            StartSkillLogic();
+            yield break;
+        }
+
+        yield return new WaitUntil(() => !PlayerAttack.Instance.isAttacking && !PlayerAttack.Instance.isCharging);
+
+        if (!PlayerAttack.Instance.isAttacking && !PlayerAttack.Instance.isCharging)
+        {
+            StartSkillLogic();
+        }
+    }
+
+    private void StartSkillLogic()
+    {
+        //PlayerAttack.Instance.ComboResetFunc();
+        InstantiateClone();
     }
 }

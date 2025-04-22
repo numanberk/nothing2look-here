@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: 80d92afde9c16dc43a636ccf6a21e974
+guid: 4502532cf813ac94686ffe1ed328aa2c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9127231741717589244
-    second: annihilationIcon2_0
+      213: -5403317868153835164
+    second: ChatGPT Image 22 Nis 2025 21_07_55_0
   - first:
-      213: 8031244047823300460
-    second: annihilationIcon2_1
-  - first:
-      213: 4813913145864191490
-    second: annihilationIcon2_2
-  - first:
-      213: 7732948706071162191
-    second: annihilationIcon2_3
-  - first:
-      213: 940956119099911773
-    second: annihilationIcon2_4
-  - first:
-      213: -6185130100959035362
-    second: annihilationIcon2_5
+      213: -8772927609514359660
+    second: ChatGPT Image 22 Nis 2025 21_07_55_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -61,7 +49,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -115,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: annihilationIcon2_0
+      name: ChatGPT Image 22 Nis 2025 21_07_55_0
       rect:
         serializedVersion: 2
         x: 19
-        y: 0
-        width: 1003
-        height: 1019
+        y: 105
+        width: 715
+        height: 914
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cfc2fb339e07aae70800000000000000
-      internalID: 9127231741717589244
+      spriteID: 4617b24e60f8305b0800000000000000
+      internalID: -5403317868153835164
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: annihilationIcon2_1
+      name: ChatGPT Image 22 Nis 2025 21_07_55_1
       rect:
         serializedVersion: 2
-        x: 202
-        y: 473
-        width: 196
-        height: 197
+        x: 467
+        y: 16
+        width: 523
+        height: 947
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,96 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c676afef8e5b47f60800000000000000
-      internalID: 8031244047823300460
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: annihilationIcon2_2
-      rect:
-        serializedVersion: 2
-        x: 227
-        y: 458
-        width: 95
-        height: 77
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 20e71de30847ec240800000000000000
-      internalID: 4813913145864191490
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: annihilationIcon2_3
-      rect:
-        serializedVersion: 2
-        x: 318
-        y: 126
-        width: 385
-        height: 330
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f4d20b390e3f05b60800000000000000
-      internalID: 7732948706071162191
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: annihilationIcon2_4
-      rect:
-        serializedVersion: 2
-        x: 623
-        y: 471
-        width: 199
-        height: 199
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d5e2e2cda92fe0d00800000000000000
-      internalID: 940956119099911773
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: annihilationIcon2_5
-      rect:
-        serializedVersion: 2
-        x: 702
-        y: 456
-        width: 93
-        height: 79
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e10c2c281f00a2aa0800000000000000
-      internalID: -6185130100959035362
+      spriteID: 4940ea2f1dc404680800000000000000
+      internalID: -8772927609514359660
       vertices: []
       indices: 
       edges: []
@@ -250,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -259,7 +159,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ChatGPT Image 22 Nis 2025 21_07_55_0: -5403317868153835164
+      ChatGPT Image 22 Nis 2025 21_07_55_1: -8772927609514359660
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -43,6 +43,7 @@ public class PlayerAttack : MonoBehaviour
     public bool coroutineStarted;
     public GameObject Player;
     public bool isIdle;
+    public bool isCharging;
     public Vector2 attackDir;
     public static System.Action<int> OnPlayerAttacked;
 
@@ -90,6 +91,7 @@ public class PlayerAttack : MonoBehaviour
         if(sword)
         {
             attackDir = swordScript.attackDir;
+            isCharging = swordScript.isCharging;
         }
     }
 

@@ -209,6 +209,9 @@ public class Health : MonoBehaviour
 
 
             var go = Instantiate(FloatingHitTextPrefab, newPos, Quaternion.identity, canvas.transform);
+            int count = canvasRT.GetComponentsInChildren<FloatingHitText>().Length;
+
+            go.GetComponent<FloatingHitText>().newY = go.GetComponent<FloatingHitText>().originalY + count * 3; //original = 5, count = 1 iken 8 ........ count = 2 iken 11;
 
 
             //SCALE MULTIPLIER

@@ -401,7 +401,7 @@ public class Sword : MonoBehaviour
 
         PlayerAttack.Instance.attackObjectParent.rotation = Quaternion.Euler(0, 0, minAngle);
         PlayerAttack.Instance.attackObjectParent
-            .DORotate(new Vector3(0, 0, maxAngle), thirdHitAnimLength)
+            .DORotate(new Vector3(0, 0, maxAngle), thirdHitAnimLength, RotateMode.FastBeyond360) //FASTBEYOND360 KALDIRABİLİRSİN? BİRAZ DAHA YAVAŞ OLUR?
             .SetEase(Ease.OutExpo);
         PlayerAttack.Instance.attackObjectAnimator.SetTrigger("Swing3");
 

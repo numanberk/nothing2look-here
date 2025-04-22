@@ -8,6 +8,7 @@ using UnityEngine;
 
         
         public float baseSpeed;
+        //public bool canMove = true;
 
 
         private Animator animator;
@@ -29,29 +30,31 @@ using UnityEngine;
 
             baseSpeed = speed;
             Player = this.gameObject;
+
     }
 
 
     private void Update()
     {
-        HandleMovement();
+            HandleMovement();
 
-        if(moveDir.magnitude > 0 && !attackScript.isAttacking)
-        {
-            if(attackScript.sword && !Player.GetComponentInChildren<Sword>().isCharging)
+            if (moveDir.magnitude > 0 && !attackScript.isAttacking)
             {
-                animator.SetInteger("Direction", animDirection);
-            }
-            
-        }
-        else
-        {
-            return;
-        }
+                if (attackScript.sword && !Player.GetComponentInChildren<Sword>().isCharging)
+                {
+                    animator.SetInteger("Direction", animDirection);
+                }
 
-        animator.SetFloat("MoveX", moveDir.x);
-        animator.SetFloat("MoveY", moveDir.y);
+            }
+            else
+            {
+                return;
+            }
+
+            animator.SetFloat("MoveX", moveDir.x);
+            animator.SetFloat("MoveY", moveDir.y);
     }
+
 
     private void HandleMovement()
     {
