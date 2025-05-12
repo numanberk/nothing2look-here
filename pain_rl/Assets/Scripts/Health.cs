@@ -20,6 +20,7 @@ public class Health : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnHit;
     public UnityEvent OnDeath;
+    public static System.Action OnEnemyDied;
 
     [Header("DONT TOUCH")]
     private ChainOnEnemy chain;
@@ -40,6 +41,7 @@ public class Health : MonoBehaviour
     public bool isInvulnerable;
     private float lastDamageTime;
     private float damageCooldown = 0.15f;
+    private bool hasGivenCharge = false;
 
     private void Start()
     {
@@ -76,6 +78,8 @@ public class Health : MonoBehaviour
         {
             healthText.text = (currentHealth).ToString();
         }
+
+
     }
 
     private void Update()
@@ -122,6 +126,20 @@ public class Health : MonoBehaviour
                 Destroy(chain.gameObject);
             }
 
+        }
+
+        if (!hasGivenCharge)
+        {
+            // Check if both conditions are met
+            if (PlayerAttack.Instance.punch && Punch.Instance.isCharged)
+            {
+                // Optional safety: prevent double subscription just in case
+                OnEnemyDied -= Punch.Instance.AddChargeWithKill;
+                OnEnemyDied += Punch.Instance.AddChargeWithKill;
+
+                hasGivenCharge = true;
+                Debug.Log("Successfully subscribed to OnEnemyDied");
+            }
         }
 
     }
@@ -280,6 +298,12 @@ public class Health : MonoBehaviour
     public void ObjectDie(GameObject gameObject1)
     {
         StartCoroutine(Destroyer(gameObject1));
+
+        if(gameObject1.CompareTag("Enemy"))
+        {
+            OnEnemyDied?.Invoke();
+        }
+
     }
 
     private IEnumerator CheckChain(int damage)

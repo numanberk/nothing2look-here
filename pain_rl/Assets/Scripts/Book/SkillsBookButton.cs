@@ -10,7 +10,7 @@ public class SkillsBookButton : MonoBehaviour
     [SerializeField] public GameObject infoPrefab;
     [SerializeField] public GameObject mainSkillScript;
     private bool instantiated = false;
-    private GameObject infoObj;
+    public GameObject infoObj;
 
     private void Update()
     {
@@ -24,6 +24,8 @@ public class SkillsBookButton : MonoBehaviour
     private void Start()
     {
         GetComponent<Animator>().SetBool("colored", false);
+
+
     }
 
     void InstantiateInfo()

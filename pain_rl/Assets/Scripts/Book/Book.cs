@@ -38,6 +38,8 @@ public class Book : MonoBehaviour
     public Transform[] containers;
     public Vector3 basePos;
     public Vector3 camePos;
+    private GameObject firstSkill;
+    private bool firstOpened;
 
     //private bool hasGotPunch;
 
@@ -53,6 +55,9 @@ public class Book : MonoBehaviour
         basePos = transform.localPosition;
         camePos = basePos;
         camePos.y = 12;
+        firstOpened = false;
+
+        StartCoroutine(WaitForSkillComponent());
     }
 
     private void Update()
@@ -60,13 +65,33 @@ public class Book : MonoBehaviour
         GetComponent<Animator>().speed = 1 / animLength;
     }
 
+    private IEnumerator WaitForSkillComponent()
+    {
+        while (firstSkill == null || firstSkill.GetComponent<SkillsBookButton>() == null || firstSkill.GetComponent<SkillsBookButton>().infoObj == null)
+        {
+            yield return null; // Wait until the next frame
+        }
+
+        if (!firstOpened)
+        {
+            firstSkill.GetComponent<SkillsBookButton>().ButtonPressed();
+            firstOpened = true;
+        }
+    }
 
     public void PlaceNextObject(GameObject newObject)
     {
-        Transform targetContainer = containers.OrderBy(c => c.childCount).First();
+        bool isFirstEver = containers.All(c => c.childCount == 0);
 
+        if (isFirstEver)
+        {
+            firstSkill = newObject;
+        }
+
+        Transform targetContainer = containers.OrderBy(c => c.childCount).First();
         newObject.transform.SetParent(targetContainer, false);
     }
+
 
     public void GetBookState1()
     {

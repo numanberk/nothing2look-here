@@ -47,7 +47,7 @@ public class PunchBookValues : MonoBehaviour
             critChance2.text = Mathf.RoundToInt(Punch.Instance.critChance * Punch.Instance.critChanceMultiplier * 100).ToString() + "%";
 
             turn1.text = Mathf.RoundToInt(1 / Punch.Instance.addChargeEachPunch).ToString();
-            turn2.text = Mathf.RoundToInt(1 / Punch.Instance.substractChargeEachPunch).ToString();
+            turn2.text = Mathf.RoundToInt(1 / Punch.Instance.substractChargeEachPunch).ToString() + "+" + Mathf.RoundToInt(Punch.Instance.killRegenCharge / Punch.Instance.substractChargeEachPunch).ToString();
         }
     }
 

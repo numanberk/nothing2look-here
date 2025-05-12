@@ -161,7 +161,8 @@ MonoBehaviour:
   chargedNumberOfAttacks: 2
   attackRangeHorizontalMultiplier: 1.4
   addChargeEachPunch: 0.045
-  substractChargeEachPunch: 0.1667
+  substractChargeEachPunch: 0.25
+  killRegenCharge: 0.5
   dashSpeed: 18
   chargedHitStopTime: 0.045
   critChance: 0.03

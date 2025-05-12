@@ -306,7 +306,10 @@ public class ChainSkill : MonoBehaviour
     IEnumerator AttackCooldown()
     {
         inAttackCooldown = true;
-        StartCoroutine(Sword.Instance.ChargeInterrupt());
+        if(PlayerAttack.Instance.sword)
+        {
+            StartCoroutine(Sword.Instance.ChargeInterrupt());
+        }
         yield return new WaitForSeconds(attackDelay);
         inAttackCooldown = false;
         PlayerAttack.Instance.canAttack = true;

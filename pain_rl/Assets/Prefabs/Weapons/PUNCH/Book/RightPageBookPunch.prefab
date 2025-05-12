@@ -39,8 +39,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 30.681763, y: -8.6796}
-  m_SizeDelta: {x: 289.7164, y: 658.6127}
+  m_AnchoredPosition: {x: 30.681763, y: -43.186314}
+  m_SizeDelta: {x: 289.7164, y: 727.6261}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4725904279510423136
 MonoBehaviour:
@@ -102,8 +102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -191.5096, y: 15.255669}
-  m_SizeDelta: {x: 775.98, y: 692.8851}
+  m_AnchoredPosition: {x: -187.67293, y: -51.8872}
+  m_SizeDelta: {x: 1021.5311, y: 888.5587}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &129754255496487152
 CanvasRenderer:
@@ -313,7 +313,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 194.8954, y: -131.54527}
+  m_AnchoredPosition: {x: 194.8954, y: -157.02968}
   m_SizeDelta: {x: 389.7908, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4464444760705593637
@@ -621,7 +621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -183.5943, y: 459.69763}
+  m_AnchoredPosition: {x: -183.5943, y: 471.46}
   m_SizeDelta: {x: 760.1096, y: 384.3685}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1324491705554761377
@@ -762,7 +762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275.5058, y: -393.90512}
+  m_AnchoredPosition: {x: 275.5058, y: -495.84274}
   m_SizeDelta: {x: 228.57, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4802013955426723608
@@ -898,7 +898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.485, y: -301.60184}
+  m_AnchoredPosition: {x: 28.485, y: -378.05508}
   m_SizeDelta: {x: 56.97, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8492931703597606725
@@ -1231,7 +1231,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 266.5958, y: -218.99855}
+  m_AnchoredPosition: {x: 266.5958, y: -269.96738}
   m_SizeDelta: {x: 246.39, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7625255664220135726
@@ -1775,7 +1775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.485, y: -473.27505}
+  m_AnchoredPosition: {x: 28.485, y: -600.6971}
   m_SizeDelta: {x: 56.97, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5174102128314328575
@@ -2647,7 +2647,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 194.8954, y: -481.3584}
+  m_AnchoredPosition: {x: 194.8954, y: -608.7804}
   m_SizeDelta: {x: 389.7908, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &601850695007426009
@@ -2678,7 +2678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PUNCHES BEFORE COOLING DOWN
+  m_text: PUNCHES BEFORE COOLING DOWN/ RECHARGED PUNCHES AFTER A KO
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa84f32102e6cf14d9387bc91f7c773f, type: 2}
   m_sharedMaterial: {fileID: -6701417629004516359, guid: aa84f32102e6cf14d9387bc91f7c773f, type: 2}
@@ -2783,7 +2783,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.485, y: -387.43845}
+  m_AnchoredPosition: {x: 28.485, y: -489.3761}
   m_SizeDelta: {x: 56.97, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4308830746889262979
@@ -3055,7 +3055,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.485, y: -215.76521}
+  m_AnchoredPosition: {x: 28.485, y: -266.73407}
   m_SizeDelta: {x: 56.97, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1560922287745570212
@@ -3266,7 +3266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 194.8954, y: -306.45184}
+  m_AnchoredPosition: {x: 194.8954, y: -382.90506}
   m_SizeDelta: {x: 389.7908, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1119131492866680010
@@ -3679,8 +3679,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -337.2339, y: -8.6796}
-  m_SizeDelta: {x: 389.7908, y: 658.6127}
+  m_AnchoredPosition: {x: -337.2339, y: -43.186314}
+  m_SizeDelta: {x: 389.7908, y: 727.6261}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3567110364747240233
 MonoBehaviour:
@@ -4089,7 +4089,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.485, y: -129.9286}
+  m_AnchoredPosition: {x: 28.485, y: -155.41302}
   m_SizeDelta: {x: 56.97, y: 88.184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4861796312869427762
@@ -4225,7 +4225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -183.5943, y: 459.69763}
+  m_AnchoredPosition: {x: -183.5943, y: 481.3}
   m_SizeDelta: {x: 766.194, y: 384.3685}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6175693202193305023
@@ -4257,8 +4257,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'Blazing Fists of Aegis has improved attack damage and crit chance. Each
-    use of Blazing Fists of Aegis also gives a slight movement boost towards the
-    attack direction and slowly cools down the weapon back to the original form.
+    attack sequence of Blazing Fists of Aegis slowly cools down the weapon back to
+    the original form but also gives a slight movement boost towards the attack direction.
+    Knocking out enemies recharge some heat to help keep the fists in this form.
 
 '
   m_isRightToLeft: 0
@@ -4370,8 +4371,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 30.681763, y: -8.6796}
-  m_SizeDelta: {x: 289.7164, y: 658.6127}
+  m_AnchoredPosition: {x: 30.681763, y: -43.186314}
+  m_SizeDelta: {x: 289.7164, y: 727.6261}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1904282615533389230
 MonoBehaviour:
@@ -4433,8 +4434,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -191.5096, y: 15.255669}
-  m_SizeDelta: {x: 775.98, y: 692.8851}
+  m_AnchoredPosition: {x: -187.67293, y: -51.8872}
+  m_SizeDelta: {x: 1021.5311, y: 888.5587}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6398407676891907668
 CanvasRenderer:
@@ -4513,8 +4514,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -337.2339, y: -8.6796}
-  m_SizeDelta: {x: 389.7908, y: 658.6127}
+  m_AnchoredPosition: {x: -337.2339, y: -43.186314}
+  m_SizeDelta: {x: 389.7908, y: 727.6261}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4888688351595514780
 MonoBehaviour:

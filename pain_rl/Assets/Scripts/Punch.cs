@@ -25,6 +25,7 @@ public class Punch : MonoBehaviour
     [SerializeField] public float attackRangeHorizontalMultiplier;
     [SerializeField] public float addChargeEachPunch;
     [SerializeField] public float substractChargeEachPunch;
+    [SerializeField] public float killRegenCharge;
     [SerializeField] public float dashSpeed;
     [SerializeField] public float chargedHitStopTime;
     [Space]
@@ -87,6 +88,8 @@ public class Punch : MonoBehaviour
     }
 
 
+    
+
     private void Update()
     {
         PlayerAttack.Instance.numberOfAttacks = currentNumberOfAttacks;
@@ -144,6 +147,7 @@ public class Punch : MonoBehaviour
         baseCooldown = attackCooldown;
         baseAnimLength = animationLength;
         hasInstantiatedBook = false;
+
 
         
 
@@ -313,6 +317,12 @@ public class Punch : MonoBehaviour
     {
 
             PlayerAttack.Instance.chargeSlider.GetComponent<Slider>().value -= substractChargeEachPunch;
+    }
+
+    public void AddChargeWithKill()
+    {
+        PlayerAttack.Instance.chargeSlider.GetComponent<Slider>().value += killRegenCharge;
+        Debug.Log("added" + killRegenCharge);
     }
 
     public void DashTowardsPunch()
