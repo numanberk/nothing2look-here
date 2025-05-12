@@ -25,6 +25,8 @@ public class ChainSkill : MonoBehaviour
     [SerializeField] public GameObject ChainParticlePurple;
     [SerializeField] public GameObject ChainParticleGreen;
     [SerializeField] public GameObject ChainF1UIPrefab;
+    [SerializeField] public GameObject ChainBookImagePrefab;
+    [SerializeField] public GameObject ChainBookInfoPrefab;
     [SerializeField] private float attackDelay;
 
     [Header("DONT TOUCH")]
@@ -38,6 +40,7 @@ public class ChainSkill : MonoBehaviour
     private EntitySFX entitySFX;
     private bool inAttackCooldown = false;
     private GameObject Player;
+    private bool hasInstantiatedBook;
 
     private void Awake()
     {
@@ -52,6 +55,7 @@ public class ChainSkill : MonoBehaviour
         skillManager.requirementsMetForSkill = true;
         skillManager.endableSkill = true;
         Player = GameObject.Find("Player");
+        hasInstantiatedBook = false;
     }
 
     private void Update()
@@ -79,6 +83,12 @@ public class ChainSkill : MonoBehaviour
             PlayerAttack.Instance.canAttack = false;
         }
 
+
+        if (!hasInstantiatedBook && Book.Instance != null)
+        {
+            InstantiateBook();
+            hasInstantiatedBook = true;
+        }
 
     }
     public void SkillGo()
@@ -255,10 +265,18 @@ public class ChainSkill : MonoBehaviour
         skillManager.SpawnedUI = true;
         skillManager.currentUI = newUI;
 
-        GameObject newF1 = Instantiate(ChainF1UIPrefab, skillInfos.transform);
+        GameObject newF1 = Instantiate(ChainF1UIPrefab, skillManager.row.transform);
         newF1.transform.localPosition = Vector3.zero;
         skillManager.SpawnedF1 = true;
         skillManager.currentF1 = newF1;
+    }
+
+    private void InstantiateBook()
+    {
+        var bookObj = Instantiate(ChainBookImagePrefab);
+        bookObj.GetComponent<SkillsBookButton>().mainSkillScript = this.gameObject;
+        bookObj.GetComponent<SkillsBookButton>().infoPrefab = ChainBookInfoPrefab;
+        Book.Instance.PlaceNextObject(bookObj);
     }
 
     private void GreenCheck()
@@ -288,18 +306,12 @@ public class ChainSkill : MonoBehaviour
     IEnumerator AttackCooldown()
     {
         inAttackCooldown = true;
-        StartCoroutine(ChargeInterrupt());
+        StartCoroutine(Sword.Instance.ChargeInterrupt());
         yield return new WaitForSeconds(attackDelay);
         inAttackCooldown = false;
         PlayerAttack.Instance.canAttack = true;
     }
 
-    IEnumerator ChargeInterrupt()
-    {
-        Player.GetComponentInChildren<Sword>().chargeInterrupt = true;
-        yield return new WaitForSeconds(0.018f);
-        Player.GetComponentInChildren<Sword>().chargeInterrupt = false;
-    }
 
 
 

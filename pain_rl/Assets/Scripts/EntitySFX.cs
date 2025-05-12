@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 
 public class EntitySFX : MonoBehaviour
 {
+    [SerializeField] public AudioClip skillCharge;
     [SerializeField] public AudioClip[] barrelHit;
     [SerializeField] public AudioClip[] barrelDeath;
     [SerializeField] public AudioClip[] enemyConfused;
@@ -18,10 +19,15 @@ public class EntitySFX : MonoBehaviour
     [SerializeField] public AudioClip chainBreak;
     [SerializeField] public AudioClip annihilationCharge;
     [SerializeField] public AudioClip explosion;
+    [SerializeField] public AudioClip dash;
+    [SerializeField] public AudioClip shatter;
+    [SerializeField] public AudioClip glow;
 
     public AudioSource audioSource;
     private float baseVolume;
     private float basePitch;
+    private float lastSoundTime;
+    private float soundCooldown = 0.15f;
 
 
     private void Awake()
@@ -29,7 +35,7 @@ public class EntitySFX : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
-            audioSource = gameObject.AddComponent<AudioSource>(); // Add it dynamically
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
 
@@ -46,13 +52,14 @@ public class EntitySFX : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
         }
     }
-    public void BarrelHitSFX()
+    public void BarrelHitSFX()  //ÝKÝ SES ARASINDA DELAY VAR!
     {
-        if (barrelHit.Length > 0)
+        if (barrelHit.Length > 0 && Time.time >= lastSoundTime + soundCooldown) 
         {
             int randomIndex;
             randomIndex = Random.Range(0, barrelHit.Length);
             audioSource.PlayOneShot(barrelHit[randomIndex]);
+            lastSoundTime = Time.time;
         }
     }
 
@@ -174,6 +181,28 @@ public class EntitySFX : MonoBehaviour
     {
         yield return new WaitForSeconds(explosion.length);
         audioSource.volume = baseVolume;
+    }
+
+    public void SkillCharge()
+    {
+        audioSource.PlayOneShot(skillCharge);
+    }
+
+    public void Dash()
+    {
+        audioSource.PlayOneShot(dash);
+    }
+
+    public void Shatter()
+    {
+        audioSource.PlayOneShot(shatter);
+    }
+
+    public void Glow()
+    {
+        audioSource.clip = glow;
+        audioSource.loop = true;
+        audioSource.Play();
     }
 
 

@@ -37,12 +37,16 @@ public class Health : MonoBehaviour
     private ChaserEnemyAI enemyAI1;
     private ShooterEnemyAI enemyAI2;
     private DasherEnemyAI enemyAI3;
+    public bool isInvulnerable;
+    private float lastDamageTime;
+    private float damageCooldown = 0.15f;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         playerPain = GetComponent<PlayerPain>();
         currentHealth = maxHealth;
+        isInvulnerable = false;
 
         Transform spritesTransform = this.gameObject.transform.Find("Sprites");
         if (spritesTransform != null)
@@ -124,66 +128,83 @@ public class Health : MonoBehaviour
 
     public void Hit(int damage, int source)
     {
-        lastHitTaken = damage;
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        if (anim != null)
+        if(!isInvulnerable)
         {
-            anim.SetTrigger("Hit");
-        }
-        else
-        {
-            Debug.Log("anim null");
-        }
-
-        if (healthText != null)
-        {
-            healthText.text = (currentHealth).ToString();
-        }
-
-        if (healthSlider != null)
-        {
-            healthSlider.value = currentHealth;
-            //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
-        }
-
-
-
-        if (source != -1 && chain != null) //-1, düþmanlarýn kendine sektirmesi için olan source kodu.
-        {
-            chain.skill.DamageDistribution(damage, this.gameObject);
-        }
-
-
-
-
-
-        //SADECE PLAYER VARSA GEÇERLÝ - playerPain assignlanmýþ olmalý!!!
-        if (playerPain != null && currentHealth > 0 && !PainMeter.Instance.isFull && playerPain.canFillPain)
-        {
-
-            if (source == 1)
+            if (ShatterdashSkill.Instance != null && ShatterdashSkill.Instance.isDashing)
             {
-                playerPain.sourceDamage1 += damage;
+                 if(Time.time < lastDamageTime + damageCooldown)
+                {
+                    return;
+                }
+            }
+            
+
+            lastDamageTime = Time.time;
+            lastHitTaken = damage;
+            currentHealth -= damage;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+            if (anim != null)
+            {
+                anim.SetTrigger("Hit");
+            }
+            else
+            {
+                Debug.Log("anim null");
             }
 
-            if (source == 2)
+            if (healthText != null)
             {
-                playerPain.sourceDamage2 += damage;
+                healthText.text = (currentHealth).ToString();
             }
 
-            if (source == 3)
+            if (healthSlider != null)
             {
-                playerPain.sourceDamage3 += damage;
+                healthSlider.value = currentHealth;
+                //start metodunda max value'yu max health yapmamýþ olsak eþitliðin sað tarafý = currentHealth/maxHealth olurdu.
             }
 
-            PainMeter.Instance.Container_INT.GetComponent<Animator>().SetTrigger("Filling");
-            playerPain.latestSource = source;
+
+
+            if (source != -1 && chain != null) //-1, düþmanlarýn kendine sektirmesi için olan source kodu.
+            {
+                chain.skill.DamageDistribution(damage, this.gameObject);
+            }
+
+
+
+
+
+            //SADECE PLAYER VARSA GEÇERLÝ - playerPain assignlanmýþ olmalý!!!
+            if (playerPain != null && currentHealth > 0 && !PainMeter.Instance.isFull && playerPain.canFillPain)
+            {
+
+                if (source == 1)
+                {
+                    playerPain.sourceDamage1 += damage;
+                }
+
+                if (source == 2)
+                {
+                    playerPain.sourceDamage2 += damage;
+                }
+
+                if (source == 3)
+                {
+                    playerPain.sourceDamage3 += damage;
+                }
+
+                PainMeter.Instance.Container_INT.GetComponent<Animator>().SetTrigger("Filling");
+                playerPain.latestSource = source;
+
+
+
+            }
+
+            StartCoroutine(OnHitDelayer());
 
         }
-
-        StartCoroutine(OnHitDelayer());
 
 
     }
@@ -209,7 +230,17 @@ public class Health : MonoBehaviour
 
 
             var go = Instantiate(FloatingHitTextPrefab, newPos, Quaternion.identity, canvas.transform);
-            int count = canvasRT.GetComponentsInChildren<FloatingHitText>().Length;
+            int count = canvasRT.GetComponentsInChildren<FHT_Check>().Length;
+
+            FHT_Check[] checks = canvasRT.GetComponentsInChildren<FHT_Check>();
+            if (checks.Length >= 4)
+            {
+                foreach (FHT_Check check in checks)
+                {
+                    Destroy(check.gameObject.GetComponent<FHT_Check>());
+                }
+            }
+
 
             go.GetComponent<FloatingHitText>().newY = go.GetComponent<FloatingHitText>().originalY + count * 3; //original = 5, count = 1 iken 8 ........ count = 2 iken 11;
 

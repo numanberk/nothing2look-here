@@ -278,7 +278,10 @@ public class DasherEnemyAI : MonoBehaviour
     public IEnumerator StunAfterDash()
     {
         yield return new WaitForSeconds(stunAfterDash);
-        Stun.SetActive(false);
+        if(Stun != null)
+        {
+            Stun.SetActive(false);
+        }
         StopChasingPlayer();
         dashStarted = false;
     }

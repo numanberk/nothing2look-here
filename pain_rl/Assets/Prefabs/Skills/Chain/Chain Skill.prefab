@@ -1,0 +1,276 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6902430426869472097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7501566496896140408}
+  - component: {fileID: 8065716800882183229}
+  - component: {fileID: 8685749452436485366}
+  - component: {fileID: 3893648756671278194}
+  - component: {fileID: 1904490457606762180}
+  m_Layer: 0
+  m_Name: Chain Skill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7501566496896140408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902430426869472097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8065716800882183229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902430426869472097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 920126f185b8fe94f992b25c9ba050fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainProjectileSpeed: 32
+  chainDamage: 20
+  chainLifetime: 1
+  chainActivateTime: 1.5
+  chainJumpSearchTime: 4
+  maxChainJumpDistance: 9
+  ChainSkillUIPrefab: {fileID: 1692897120934211338, guid: bdaf04c3d046ed24fb0b8839606f9b24, type: 3}
+  ChainProjectilePrefab: {fileID: 7415385489440186072, guid: f76417ec3ee40714784628ae9dc3605a, type: 3}
+  ChainOnEnemyPrefab: {fileID: 7415385489440186072, guid: ec6f9c2842f78be428e8ec2b8ca77aa7, type: 3}
+  ChainParticlePurple: {fileID: 3152187808762963883, guid: 53dca7e03d3e53f4290d67e9ccade1a8, type: 3}
+  ChainParticleGreen: {fileID: 3152187808762963883, guid: 34593fd7a992c03449dfdc39ac914e85, type: 3}
+  ChainF1UIPrefab: {fileID: 8214945179504393433, guid: 9755f45f05378074c9236bf09cb93a37, type: 3}
+  ChainBookImagePrefab: {fileID: 1692897120934211338, guid: 28629510cebab7040b9a6f7b74f93210, type: 3}
+  ChainBookInfoPrefab: {fileID: 1692897120934211338, guid: b87528e6ee8160e4a8c84011cdded0b0, type: 3}
+  attackDelay: 1
+  latestChain: {fileID: 0}
+  oldestChain: {fileID: 0}
+  skillManager: {fileID: 0}
+  chainedList: []
+  allChainsList: []
+  skillUI: {fileID: 0}
+  skillInfos: {fileID: 0}
+--- !u!114 &8685749452436485366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902430426869472097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3b44f65c77b964494ae7893d93de17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillCooldown: 18
+  skillButton: 101
+  UseSkill:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8065716800882183229}
+        m_TargetAssemblyTypeName: ChainSkill, Assembly-CSharp
+        m_MethodName: SkillGo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  EndSkill:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8065716800882183229}
+        m_TargetAssemblyTypeName: ChainSkill, Assembly-CSharp
+        m_MethodName: SkillEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  SkillUI:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8065716800882183229}
+        m_TargetAssemblyTypeName: ChainSkill, Assembly-CSharp
+        m_MethodName: SpawnUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Player: {fileID: 0}
+  SpawnedUI: 0
+  SpawnedF1: 0
+  canUseSkill: 0
+  canGoToCooldown: 0
+  isRunning: 0
+  isInCooldown: 0
+  currentUI: {fileID: 0}
+  currentF1: {fileID: 0}
+  keybind: {fileID: 0}
+  keybindF1: {fileID: 0}
+  timer: {fileID: 0}
+  secondary: {fileID: 0}
+  other: {fileID: 0}
+  other2: {fileID: 0}
+  requirementsMetForSkill: 0
+  endableSkill: 0
+  canPressButton: 1
+  row: {fileID: 0}
+--- !u!82 &3893648756671278194
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902430426869472097}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.105
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1904490457606762180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902430426869472097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0fc3614d03c82e418f80fab9138edb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillCharge: {fileID: 8300000, guid: c768222ee27037e4a812abfc85fb9436, type: 3}
+  barrelHit: []
+  barrelDeath: []
+  enemyConfused: []
+  bow: []
+  stun: []
+  chainProjectile: {fileID: 0}
+  chainHit: {fileID: 0}
+  chainActive: {fileID: 0}
+  chainSearchLoop: {fileID: 0}
+  chainLocked: {fileID: 0}
+  chainBreak: {fileID: 8300000, guid: 5cf04bfcf44ed7c4483f1d0c9e170dc2, type: 3}
+  annihilationCharge: {fileID: 0}
+  explosion: {fileID: 0}
+  dash: {fileID: 0}
+  shatter: {fileID: 0}
+  glow: {fileID: 0}
+  audioSource: {fileID: 0}

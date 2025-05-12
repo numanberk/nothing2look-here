@@ -12,7 +12,7 @@ public class CloneSword : MonoBehaviour
     public Transform sword;
     public Transform swordParent;
     public float delay;
-    public float hitStopTime;
+    //public float hitStopTime;
 
     void Start()
     {
@@ -25,7 +25,7 @@ public class CloneSword : MonoBehaviour
     public void SetupFromSword(Sword original)
     {
         impactEffect = original.impactEffect;
-        hitStopTime = original.hitStopTime;
+        //hitStopTime = original.hitStopTime;
         //attackPoint = original.transform.Find("AttackPoint"); // or assign from outside
     }
 
@@ -88,7 +88,7 @@ public class CloneSword : MonoBehaviour
                 if (obj.CompareTag("Enemy"))
                 {
                     obj.GetComponent<Health>()?.Hit(PlayerAttack.Instance.attackDamage, 0);
-                    HitStop.Instance.Stop(hitStopTime);
+                    HitStop.Instance.Stop(PlayerAttack.Instance.hitStopTime);
 
                     if (impactEffect != null)
                     {
@@ -101,7 +101,7 @@ public class CloneSword : MonoBehaviour
                 {
                     obj.GetComponent<Health>()?.Hit(PlayerAttack.Instance.attackDamage, 0);
                     obj.GetComponent<EntitySFX>().BarrelHitSFX();
-                    HitStop.Instance.Stop(hitStopTime);
+                    HitStop.Instance.Stop(PlayerAttack.Instance.hitStopTime);
 
                     if (impactEffect != null)
                     {
@@ -142,12 +142,6 @@ public class CloneSword : MonoBehaviour
         if (animClone == null)
         {
             animClone = cloneAttack.cloneAnim;
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            animSword.SetTrigger("Swing1");
-            animClone.SetTrigger("Attack1+2");
         }
 
         sword.position = swordParent.position;

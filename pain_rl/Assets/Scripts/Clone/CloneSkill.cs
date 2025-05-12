@@ -12,6 +12,8 @@ public class CloneSkill : MonoBehaviour
     [Header("ASSIGN")]
     [SerializeField] GameObject CloneSkillUIPrefab;
     [SerializeField] GameObject CloneF1UIPrefab;
+    [SerializeField] GameObject CloneBookImagePrefab;
+    [SerializeField] GameObject CloneBookInfoPrefab;
     [SerializeField] GameObject CloneCanvasSlider;
 
     private SkillManager skillManager;
@@ -24,6 +26,7 @@ public class CloneSkill : MonoBehaviour
     private Slider slider;
     private GameObject sliderCloneCanvas;
     private float elapsedTime;
+    private bool hasInstantiatedBook;
 
     private void Awake()
     {
@@ -52,10 +55,12 @@ public class CloneSkill : MonoBehaviour
         skillManager.SpawnedUI = true;
         skillManager.currentUI = newUI;
 
-        GameObject newF1 = Instantiate(CloneF1UIPrefab, skillInfos.transform);
+        GameObject newF1 = Instantiate(CloneF1UIPrefab, skillManager.row.transform);
         newF1.transform.localPosition = Vector3.zero;
         skillManager.SpawnedF1 = true;
         skillManager.currentF1 = newF1;
+
+
     }
 
     public void SkillStart()
@@ -80,31 +85,56 @@ public class CloneSkill : MonoBehaviour
 
         DestroyImmediate(clone.GetComponent<PlayerPain>());
         DestroyImmediate(clone.GetComponent<Health>());
-
-
-        Sword originalSword = player.GetComponentInChildren<Sword>();
-        GameObject swordHolder = clone.GetComponentInChildren<Sword>().gameObject;
-
-        DestroyImmediate(clone.GetComponentInChildren<Sword>());
         DestroyImmediate(clone.GetComponent<PlayerAttack>());
 
-        
-        CloneSword cloneSword = swordHolder.gameObject.AddComponent<CloneSword>();
-        cloneSword.SetupFromSword(originalSword);
         Transform cloneAttackPoint = clone.transform.Find("AttackPoint");
         Transform cloneCanvas = clone.transform.Find("Canvas");
+        GameObject chargeSlider = cloneCanvas.transform.Find("ChargeSlider").gameObject;
+        GameObject MAX = cloneCanvas.transform.Find("MAX!").gameObject;
         sliderCloneCanvas = Instantiate(CloneCanvasSlider, cloneCanvas.transform);
-        cloneSword.attackPoint = cloneAttackPoint;
+
+        if (PlayerAttack.Instance.sword)
+        {
+            Sword originalSword = player.GetComponentInChildren<Sword>();
+            GameObject swordHolder = clone.GetComponentInChildren<Sword>().gameObject;
+
+            DestroyImmediate(clone.GetComponentInChildren<Sword>());
 
 
-        clone.AddComponent<CloneAttack>();
-        clone.GetComponent<CloneAttack>().cloneSword = cloneSword;
+            CloneSword cloneSword = swordHolder.gameObject.AddComponent<CloneSword>();
+            cloneSword.SetupFromSword(originalSword);  
+            cloneSword.attackPoint = cloneAttackPoint;
+
+
+            clone.AddComponent<CloneAttack>();
+            clone.GetComponent<CloneAttack>().cloneSword = cloneSword;
+        }
+
+        if (PlayerAttack.Instance.punch)
+        {
+            Punch originalPunch = player.GetComponentInChildren<Punch>();
+            GameObject punchHolder = clone.GetComponentInChildren<Punch>().gameObject;
+
+            DestroyImmediate(clone.GetComponentInChildren<Punch>());
+
+
+            ClonePunch clonePunch = punchHolder.gameObject.AddComponent<ClonePunch>();
+            clonePunch.SetupFromPunch(originalPunch);
+            clonePunch.attackPoint = cloneAttackPoint;
+
+
+            clone.AddComponent<CloneAttack>();
+            clone.GetComponent<CloneAttack>().clonePunch = clonePunch;
+        }
+
 
 
 
 
         DestroyImmediate(clone.GetComponent<Rigidbody2D>());
         DestroyImmediate(clone.GetComponent<BoxCollider2D>());
+        DestroyImmediate(chargeSlider);
+        DestroyImmediate(MAX);
 
         SpriteRenderer[] spriteRenderers = clone.GetComponentsInChildren<SpriteRenderer>();
 
@@ -155,6 +185,12 @@ public class CloneSkill : MonoBehaviour
             firstTime = false;
             skillManager.secondary.text = (lifetime.ToString() + "s");
         }
+
+        if (!hasInstantiatedBook && Book.Instance != null)
+        {
+            InstantiateBook();
+            hasInstantiatedBook = true;
+        }
     }
 
     private IEnumerator WaitUntilNotAttackingAndStart()
@@ -176,6 +212,14 @@ public class CloneSkill : MonoBehaviour
         {
             StartSkillLogic();
         }
+    }
+
+    private void InstantiateBook()
+    {
+        var bookObj = Instantiate(CloneBookImagePrefab);
+        bookObj.GetComponent<SkillsBookButton>().mainSkillScript = this.gameObject;
+        bookObj.GetComponent<SkillsBookButton>().infoPrefab = CloneBookInfoPrefab;
+        Book.Instance.PlaceNextObject(bookObj);
     }
 
     private void StartSkillLogic()

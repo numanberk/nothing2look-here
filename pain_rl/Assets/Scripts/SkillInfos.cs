@@ -15,7 +15,7 @@ public class SkillInfos : MonoBehaviour
         hiddenTransform = wholeInfo.GetComponent<RectTransform>().anchoredPosition;
 
         openTransform.x = hiddenTransform.x;
-        openTransform.y = hiddenTransform.y + 880;
+        openTransform.y = hiddenTransform.y + 1180;
     }
     public void Come()
     {

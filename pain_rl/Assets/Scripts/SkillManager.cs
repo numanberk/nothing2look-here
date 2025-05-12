@@ -33,20 +33,48 @@ public class SkillManager : MonoBehaviour
     public GameObject other2;
     public bool requirementsMetForSkill;
     public bool endableSkill;
+    public bool canPressButton = true;
+    private EntitySFX entitySFX;
+    private bool justBecameAvailable;
+    public GameObject row;
+    private GameObject skillInfosRow1;
+    private GameObject skillInfosRow2;
+    private GameObject skills;
+    private int index;
 
-
+    private void Awake()
+    {
+        entitySFX = GetComponent<EntitySFX>();
+    }
     private void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
+        skillInfosRow1 = GameObject.Find("Row1");
+        skillInfosRow2 = GameObject.Find("Row2");
+        skills = GameObject.Find("Skills");
         elapsedTime = skillCooldown;
         canUseSkill = true;
         canGoToCooldown = true;
         isRunning = false;
+        canPressButton = true;
+        justBecameAvailable = false;
+
+
+
+        int index = transform.GetSiblingIndex();
+
+        if (index <= 2)
+        {
+            row = skillInfosRow1;
+        }
+        else
+        {
+            row = skillInfosRow2;
+        }
     }
 
     private void Update()
     {
-        
 
 
         if (!SpawnedUI)
@@ -77,13 +105,19 @@ public class SkillManager : MonoBehaviour
             {
                 elapsedTime = skillCooldown;
                 canUseSkill = true;
+                justBecameAvailable = true;
+                if(justBecameAvailable)
+                {
+                    entitySFX.SkillCharge();
+                    justBecameAvailable = false;
+                }
             }
         }
 
 
-        if (Input.GetKeyDown(skillButton))
+        if (Input.GetKeyDown(skillButton) && !EventManager.Instance.GameFrozen)
         {
-            if(canUseSkill && requirementsMetForSkill)
+            if(canUseSkill && requirementsMetForSkill && canPressButton)
             {
                 UseSkill?.Invoke();
                 elapsedTime = 0f;
@@ -154,6 +188,23 @@ public class SkillManager : MonoBehaviour
                 }
 
                 
+            }
+
+            if(!canPressButton && !isInCooldown)
+            {
+                animUI.SetBool("isInCooldown", true);
+                if (timer != null && keybind != null)
+                {
+                    if (timer.enabled == true)
+                    {
+                        timer.enabled = false;
+                    }
+                    if (keybind.enabled == true)
+                    {
+                        keybind.enabled = false;
+                    }
+
+                }
             }
 
             if (keybind == null)
@@ -232,4 +283,5 @@ public class SkillManager : MonoBehaviour
         }
        
     }
+
 }

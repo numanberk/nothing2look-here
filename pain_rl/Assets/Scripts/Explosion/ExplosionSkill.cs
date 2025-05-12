@@ -16,6 +16,8 @@ public class ExplosionSkill : MonoBehaviour
     [SerializeField] private GameObject ExplosionPrefab;
     [SerializeField] private GameObject ExplosionSkillUIPrefab;
     [SerializeField] private GameObject ExplosionF1UIPrefab;
+    [SerializeField] private GameObject ExplosionBookImagePrefab;
+    [SerializeField] private GameObject ExplosionBookInfoPrefab;
     [SerializeField] private GameObject ExplosionParticlePrefab;
 
     [Header("DONT TOUCH")]
@@ -36,6 +38,7 @@ public class ExplosionSkill : MonoBehaviour
     public float powerGathered;
     public int baseDamage;
     private Slider slider;
+    private bool hasInstantiatedBook;
     private void Awake()
     {
         entitySFX = GetComponent<EntitySFX>();
@@ -50,6 +53,7 @@ public class ExplosionSkill : MonoBehaviour
         running = false;
         number = thresholdPainToUse * 0.01f - 0.005f;
         skillManager.endableSkill = true;
+        hasInstantiatedBook = false;
     }
 
     private void Update()
@@ -88,6 +92,12 @@ public class ExplosionSkill : MonoBehaviour
             skillManager.other.GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(slider.value * 100f).ToString() + "%";
         }
 
+        if (!hasInstantiatedBook && Book.Instance != null)
+        {
+            InstantiateBook();
+            hasInstantiatedBook = true;
+        }
+
 
     }
 
@@ -98,7 +108,7 @@ public class ExplosionSkill : MonoBehaviour
         skillManager.SpawnedUI = true;
         skillManager.currentUI = newUI;
 
-        GameObject newF1 = Instantiate(ExplosionF1UIPrefab, skillInfos.transform);
+        GameObject newF1 = Instantiate(ExplosionF1UIPrefab, skillManager.row.transform);
         newF1.transform.localPosition = Vector3.zero;
         skillManager.SpawnedF1 = true;
         skillManager.currentF1 = newF1;
@@ -213,7 +223,7 @@ public class ExplosionSkill : MonoBehaviour
 
     public void InstantiateExplosion(float powerGathered)
     {
-        baseDamage = PlayerAttack.Instance.attackDamage;
+        baseDamage = Mathf.RoundToInt(PlayerAttack.Instance.attackDamage * PlayerAttack.Instance.weaponSkillDamageMultiplier);
 
         float amplifier = 1 + powerGathered * 0.01f;
         float explosionDMG = baseDamage * Mathf.Pow(amplifier, 4f);
@@ -240,6 +250,15 @@ public class ExplosionSkill : MonoBehaviour
         entitySFX.AnnihilationGo();
 
         CameraFollow.Instance.TriggerShake(0.3f+0.53f*amplifier, amplifier*1.3f);
+    }
+
+
+    private void InstantiateBook()
+    {
+        var bookObj = Instantiate(ExplosionBookImagePrefab);
+        bookObj.GetComponent<SkillsBookButton>().mainSkillScript = this.gameObject;
+        bookObj.GetComponent<SkillsBookButton>().infoPrefab = ExplosionBookInfoPrefab;
+        Book.Instance.PlaceNextObject(bookObj);
     }
 
 

@@ -18,6 +18,7 @@ public class PlayerPain : MonoBehaviour
     public float totalPain;
     public bool canFillPain;
     public int latestSource;
+    private GameObject Player;
 
     private Health healthScript;
 
@@ -36,6 +37,7 @@ public class PlayerPain : MonoBehaviour
 
     private void Start()
     {
+        Player = this.gameObject;
         healthScript = GetComponent<Health>();
         canFillPain = true;
         totalPain = 0;
@@ -82,6 +84,34 @@ public class PlayerPain : MonoBehaviour
             }
         }
     }
+
+    public void ShatterdashOnHit()
+    {
+        if(ShatterdashSkill.Instance != null && !ShatterdashSkill.Instance.skillManager.isInCooldown && !ShatterdashSkill.Instance.isDashing)
+        {
+            InstantiateCrystal();
+        }
+    }
+
+    public void InstantiateCrystal()
+    {
+        if (ShatterdashSkill.Instance.currentCrystal != null)
+        {
+            Destroy(ShatterdashSkill.Instance.currentCrystal);
+
+            if (ShatterdashSkill.Instance.timer != null)
+            {
+                StopCoroutine(ShatterdashSkill.Instance.timer);
+                ShatterdashSkill.Instance.timer = null;
+            }
+        }
+
+        ShatterdashSkill.Instance.currentCrystal = Instantiate(ShatterdashSkill.Instance.CrystalPrefab, Player.transform.position, Quaternion.identity);
+        ShatterdashSkill.Instance.currentCrystal.GetComponent<Lifetime>().Setup(ShatterdashSkill.Instance.crystalLifetime);
+
+        ShatterdashSkill.Instance.timer = StartCoroutine(ShatterdashSkill.Instance.Timer());
+    }
+
 
 
 }

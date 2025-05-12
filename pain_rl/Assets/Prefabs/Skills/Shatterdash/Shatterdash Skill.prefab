@@ -1,0 +1,259 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5314224373390651227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3458466633486643982}
+  - component: {fileID: 7123977548044324386}
+  - component: {fileID: 4261659820164266543}
+  - component: {fileID: 9167284777520367220}
+  - component: {fileID: 6261770301418421592}
+  m_Layer: 0
+  m_Name: Shatterdash Skill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3458466633486643982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314224373390651227}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7123977548044324386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314224373390651227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3b44f65c77b964494ae7893d93de17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillCooldown: 15
+  skillButton: 304
+  UseSkill:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4261659820164266543}
+        m_TargetAssemblyTypeName: ShatterdashSkill, Assembly-CSharp
+        m_MethodName: StartSkill
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  EndSkill:
+    m_PersistentCalls:
+      m_Calls: []
+  SkillUI:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4261659820164266543}
+        m_TargetAssemblyTypeName: ShatterdashSkill, Assembly-CSharp
+        m_MethodName: SpawnUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Player: {fileID: 0}
+  SpawnedUI: 0
+  SpawnedF1: 0
+  canUseSkill: 0
+  canGoToCooldown: 0
+  isRunning: 0
+  isInCooldown: 0
+  currentUI: {fileID: 0}
+  currentF1: {fileID: 0}
+  keybind: {fileID: 0}
+  keybindF1: {fileID: 0}
+  timer: {fileID: 0}
+  secondary: {fileID: 0}
+  other: {fileID: 0}
+  other2: {fileID: 0}
+  requirementsMetForSkill: 0
+  endableSkill: 0
+  canPressButton: 0
+  row: {fileID: 0}
+--- !u!114 &4261659820164266543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314224373390651227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f98d5f884917b4688dfd1013f49b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crystalLifetime: 7
+  dashSpeed: 70
+  dashRange: 18
+  dashDamageMultiplier: 1
+  explosionRange: 4.5
+  explosionDamageMultiplier: 1
+  CrystalPrefab: {fileID: 1791968106814482450, guid: 5a36cb24e5f87734eb042210d2854654, type: 3}
+  ExplosionPrefab: {fileID: 1791968106814482450, guid: 00b485ae1863b7f4a80960490d974979, type: 3}
+  ExplosionParticlePrefab: {fileID: 3152187808762963883, guid: 8588a5f3e0271b64da6fd1651d1b7fb3, type: 3}
+  ShatterdashSkillUIPrefab: {fileID: 1692897120934211338, guid: 934036ffe40727b48a65e53ed6ea7f00, type: 3}
+  ShatterdashBookImagePrefab: {fileID: 1692897120934211338, guid: ae8e3c20186f41748bb4a050edcf705e, type: 3}
+  ShatterdashBookInfoPrefab: {fileID: 1692897120934211338, guid: 8fbdc8c12adb6a949a2890fcca9869aa, type: 3}
+  ShatterdashF1UIPrefab: {fileID: 8214945179504393433, guid: f861171cfe753f348abe13b5b5c933b7, type: 3}
+  currentCrystal: {fileID: 0}
+  skillManager: {fileID: 0}
+  isDashing: 0
+  lastCrystalPos: {x: 0, y: 0, z: 0}
+--- !u!114 &9167284777520367220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314224373390651227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0fc3614d03c82e418f80fab9138edb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillCharge: {fileID: 8300000, guid: c768222ee27037e4a812abfc85fb9436, type: 3}
+  barrelHit: []
+  barrelDeath: []
+  enemyConfused: []
+  bow: []
+  stun: []
+  chainProjectile: {fileID: 0}
+  chainHit: {fileID: 0}
+  chainActive: {fileID: 0}
+  chainSearchLoop: {fileID: 0}
+  chainLocked: {fileID: 0}
+  chainBreak: {fileID: 0}
+  annihilationCharge: {fileID: 0}
+  explosion: {fileID: 0}
+  dash: {fileID: 8300000, guid: 0159be9cca7b71f46894661f8e0460bb, type: 3}
+  shatter: {fileID: 8300000, guid: 8c7868e2ff08d1f418cd29c8d3e51dfd, type: 3}
+  glow: {fileID: 0}
+  audioSource: {fileID: 0}
+--- !u!82 &6261770301418421592
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314224373390651227}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.27
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

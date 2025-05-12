@@ -14,9 +14,10 @@ public class FloatingHitText : MonoBehaviour
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        Destroy(gameObject, animationLength * 1.33f);
+        Destroy(gameObject, animationLength * 1.2f);
         AnimationPlay();
         StartCoroutine(Rotator());
+        //StartCoroutine(DetachFromCanvas());
     }
 
     private void AnimationPlay()
@@ -38,11 +39,18 @@ public class FloatingHitText : MonoBehaviour
         if(rectTransform != null)
         {
             float random = Random.Range(-30/scaleMultiplier, 30/scaleMultiplier);
-            yield return new WaitForSeconds(animationLength / 3);
+            yield return new WaitForSeconds(animationLength / 5);
             rectTransform.DORotate(new Vector3(0, 0, random), animationLength);
 
         }
 
     }
+
+    //private IEnumerator DetachFromCanvas()
+    //{
+        //yield return new WaitForSeconds(animationLength * 0.8f);
+        //Destroy(gameObject.GetComponent<FHT_Check>());
+
+    //}
 
 }

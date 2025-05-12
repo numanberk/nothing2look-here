@@ -10,7 +10,9 @@ TagManager:
   - SkillUI
   - Annihilation
   - PlayerClone
-  - PlayerSword
+  - ShatterdashExplosion
+  - WeaponPunch
+  - WeaponSword
   layers:
   - Default
   - TransparentFX

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2264985161282756640}
   - component: {fileID: 516690829865716821}
   - component: {fileID: 4592328768501744322}
-  - component: {fileID: 4779816294718407360}
+  - component: {fileID: 4113151617894090295}
   m_Layer: 0
   m_Name: ChainProjectile
   m_TagString: Untagged
@@ -32,8 +32,8 @@ Transform:
   m_GameObject: {fileID: 7415385489440186072}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.5864847, y: -1.244873, z: -0.008730287}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 1}
+  m_LocalPosition: {x: -0.149, y: -1.101, z: -0.008730287}
+  m_LocalScale: {x: 0.158935, y: 0.14944999, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 46f429e7c920eff419623f09133e2a79, type: 3}
-  m_Color: {r: 0.8196945, g: 0.5503144, b: 1, a: 1}
+  m_Sprite: {fileID: 8922703967924587640, guid: 06d3d634d0f5b7c438515b40253e038e, type: 3}
+  m_Color: {r: 0.87113434, g: 0.54402506, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -116,7 +116,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -154,8 +154,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0000000043335984, y: 0.036352865}
-  m_Radius: 1.5477709
+  m_Offset: {x: -0.010368381, y: -0.5039296}
+  m_Radius: 2.7712128
 --- !u!114 &2264985161282756640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0fc3614d03c82e418f80fab9138edb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillCharge: {fileID: 0}
   barrelHit: []
   barrelDeath: []
   enemyConfused: []
@@ -193,6 +194,11 @@ MonoBehaviour:
   chainSearchLoop: {fileID: 0}
   chainLocked: {fileID: 0}
   chainBreak: {fileID: 0}
+  annihilationCharge: {fileID: 0}
+  explosion: {fileID: 0}
+  dash: {fileID: 0}
+  shatter: {fileID: 0}
+  glow: {fileID: 0}
   audioSource: {fileID: 0}
 --- !u!82 &4592328768501744322
 AudioSource:
@@ -291,7 +297,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!95 &4779816294718407360
+--- !u!95 &4113151617894090295
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -303,7 +309,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 17122edbc148983448d924ef0ed201ac, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Sword : MonoBehaviour
 {
 
+    public static Sword Instance;
 
     [Header("Values")]
     [SerializeField] public int attackDamage;
@@ -18,6 +19,7 @@ public class Sword : MonoBehaviour
     [SerializeField] public float critDamageMultiplier;
     [SerializeField] public float animationLength; //BUNU DEĞİŞTİRİRSEN 1) FAKE SWORD YOK OLUP GERÇEĞİ GELEN ANİMASYONUN SÜRESİNİ    2) TRAIL EFFECT ANİMASYONULARININ SÜRESİNİ BUNU EŞİTLE ANİMATÖRDE.
     [SerializeField] public float comboResetTime; //BUNU DEĞİŞTİRİRSEN SWING 1 VE 2 YAPILIRKEN PLAYERDA GÖZÜKEN ANİMASYONUN NORMALE DÖNME SÜRESİNİ DE AYARLA. EĞER COMBO DEVAM EDEBİLECEK DURUMDAYSA PLAYER DAHA GERGİN? DURSUN Kİ COMBO NE ZAMAN BİTTİ ANLAŞILSIN. + FAKE SWORD IDLE'A GİDERKEN OLAN EXIT TIMELARI DEĞİŞTİR.
+    [SerializeField] public float knockbackForce;
     [SerializeField] public float hitStopTime;
 
     [Header("3rd Hit Values")]
@@ -26,6 +28,8 @@ public class Sword : MonoBehaviour
     [SerializeField] public float thirdHitAngle;
     [SerializeField] public float maxChargeInSeconds;  //BUNU DEĞİŞTİRİRSEN PLAYER CHARGE ANİMASYONU KAÇ SANİYE ONU DA DEĞİŞTİRMEN GEREKİR. + PLAYER ATTACK'TA BU DEĞERİN ETKİLEDİĞİ HASARIN DEĞİŞİM HIZINI DEĞİŞTİRMEN GEREKİR.
     [SerializeField] public float maxChargeDamageMultiplier;
+    [SerializeField] public float thirdHitKnockbackMultiplier;
+    [SerializeField] public float speedFallOffWhileCharging;
     [Space]
     [SerializeField] public float delayBeforeThirdHit; // BUNU DEĞİŞTİRİRSEN PLAYER ANİMATÖRÜNDEKİ!!! (sword değil) SWORDATTACK3 ANİMASYONUNUN DELAY GÖSTERMELİK İLK KISMINI DA OYNATMAN GEREKİR!
     [SerializeField] public float delayAfterThirdHit; // YENİ KOMBO BAŞLATABİLMEK İÇİN GEREKLİ SÜRE. bi üstteki animasyonunun aynısının son kısmını değiştirmen gerekir.
@@ -37,6 +41,8 @@ public class Sword : MonoBehaviour
     [SerializeField] public Transform sword;
     [SerializeField] public GameObject swordObject;
     [SerializeField] public Animator swordAnimator;
+    [SerializeField] public GameObject swordBookPrefab;
+    [SerializeField] public GameObject swordBookPrefab2;
     [SerializeField] public GameObject impactEffect;
     [SerializeField] public GameObject impactEffectRED;
 
@@ -61,6 +67,8 @@ public class Sword : MonoBehaviour
     private int lastQuadrant = -1;
     private const float quadrantChangeThreshold = 15f;
     public bool chargeInterrupt;
+    private bool hasInstantiatedBook;
+    public GameObject instantiatedBookImage;
 
 
 
@@ -95,7 +103,7 @@ public class Sword : MonoBehaviour
         if (Input.GetMouseButton(0) && PlayerAttack.Instance.attackInt == 3 && PlayerAttack.Instance.canAttack)
         {
 
-            PlayerAttack.Instance.movementScript.speed = PlayerAttack.Instance.movementScript.baseSpeed / 2;
+            PlayerAttack.Instance.movementScript.speed = PlayerAttack.Instance.movementScript.baseSpeed * speedFallOffWhileCharging;
             if (!PlayerAttack.Instance.coroutineStarted)
             {
                 isCharging = true;
@@ -146,6 +154,30 @@ public class Sword : MonoBehaviour
 
         PlayerAttack.Instance.chargeSlider.GetComponent<Slider>().value = PlayerAttack.Instance.elapsedChargeTime / PlayerAttack.Instance.maxCharge;
 
+        if (!hasInstantiatedBook && Book.Instance != null)
+        {
+            InstantiateBook();
+            hasInstantiatedBook = true;
+        }
+
+    }
+
+    public void InstantiateBook()
+    {
+        instantiatedBookImage = Instantiate(swordBookPrefab, Book.Instance.P1LeftContainer.transform);
+        Instantiate(swordBookPrefab2, Book.Instance.P1RightContainer.transform);
+    }
+
+    private void Awake()
+    {
+        if (Instance == null && CompareTag("WeaponSword"))
+        {
+            Instance = this;
+        }
+        else if (Instance != null && this != Instance)
+        {
+            Debug.Log("Prevented clone from overriding Sword.Instance: " + gameObject.name);
+        }
     }
     private void Start()
     {
@@ -155,6 +187,8 @@ public class Sword : MonoBehaviour
         PlayerAttack.Instance.sword = true;
         PlayerAttack.Instance.attackObjectParent = swordParent;
         PlayerAttack.Instance.attackObjectAnimator = swordAnimator;
+        PlayerAttack.Instance.chargeSlider.SetActive(false);
+        hasInstantiatedBook = false;
     }
 
     private void ChangeValues()
@@ -166,6 +200,7 @@ public class Sword : MonoBehaviour
         PlayerAttack.Instance.attackCooldown = thirdHitAnimLength + delayAfterThirdHit;
         PlayerAttack.Instance.hitStopTime = thirdHitStopTime;
         PlayerAttack.Instance.powerfulShakeMultiplier = 1.8f;
+        PlayerAttack.Instance.knockbackForce = knockbackForce * thirdHitKnockbackMultiplier;
     }
 
     public void GetBaseValues()
@@ -183,6 +218,8 @@ public class Sword : MonoBehaviour
         PlayerAttack.Instance.critDamageMultiplier = critDamageMultiplier;
         PlayerAttack.Instance.maxCharge = maxChargeInSeconds;
         PlayerAttack.Instance.maxChargeDamageMultiplier = maxChargeDamageMultiplier;
+        PlayerAttack.Instance.knockbackForce = knockbackForce;
+
     }
 
 
@@ -275,10 +312,9 @@ public class Sword : MonoBehaviour
 
 
         //DAMAGE AYARLAMALARI
-        float damageMultiplierPain = 1 + (PainMeter.Instance.painMeter.value / PainMeter.Instance.painMeter.maxValue);
         float critMultiply;
 
-        if (Random.value < critChance)
+        if (Random.value < PlayerAttack.Instance.critChance)
         {
             critMultiply = critDamageMultiplier;
             impactEffectToShow = impactEffectRED;
@@ -295,7 +331,7 @@ public class Sword : MonoBehaviour
         //rengi etkileyen değişkenler : - crit attık mı atmadık mı?    - üçüncü vuruşta mıyız değil miyiz? 
         //rengi etkilemeyen değişkenler : - pain ile gelen damage boost ne kadar fazla?
         int damageThatEffectsTheColors = Mathf.RoundToInt(attackDamage * critMultiply * PlayerAttack.Instance.damageMultiplierWeapon * chargeTimeMultiplier);
-        int damageToDeal = Mathf.RoundToInt(damageThatEffectsTheColors * damageMultiplierPain);
+        int damageToDeal = Mathf.RoundToInt(damageThatEffectsTheColors * PlayerAttack.Instance.damageMultiplierPain);
 
 
 
@@ -319,8 +355,8 @@ public class Sword : MonoBehaviour
                     GameObject effect = Instantiate(impactEffectToShow, objects.transform.position,
                         Quaternion.Euler(0, 0, 0));
                     Destroy(effect, 1f);
-                    HitStop.Instance.Stop(hitStopTime);
-                    CameraFollow.Instance.TriggerShake(0.24f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.5f * PlayerAttack.Instance.powerfulShakeMultiplier);
+                    HitStop.Instance.Stop(PlayerAttack.Instance.hitStopTime);
+                    CameraFollow.Instance.TriggerShake(0.25f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.8f * PlayerAttack.Instance.powerfulShakeMultiplier);
                     if (critMultiply == critDamageMultiplier)
                     {
                         CritSFX();
@@ -336,6 +372,7 @@ public class Sword : MonoBehaviour
                     }
 
 
+
                 }
 
 
@@ -346,8 +383,8 @@ public class Sword : MonoBehaviour
                     GameObject effect = Instantiate(impactEffectToShow, objects.transform.position,
                         Quaternion.Euler(0, 0, 0));
                     Destroy(effect, 1f);
-                    HitStop.Instance.Stop(hitStopTime);
-                    CameraFollow.Instance.TriggerShake(0.24f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.5f * PlayerAttack.Instance.powerfulShakeMultiplier);
+                    HitStop.Instance.Stop(PlayerAttack.Instance.hitStopTime);
+                    CameraFollow.Instance.TriggerShake(0.24f * PlayerAttack.Instance.powerfulShakeMultiplier, 0.6f * PlayerAttack.Instance.powerfulShakeMultiplier);
                     if (critMultiply == critDamageMultiplier)
                     {
                         CritSFX();
@@ -479,7 +516,7 @@ public class Sword : MonoBehaviour
 
     public void PowerSlashSFX()
     {
-        if (powerSlash.Length > 0)
+        if (powerSlash.Length > 1)
         {
             int randomIndex;
             do
@@ -516,6 +553,14 @@ public class Sword : MonoBehaviour
             audioSource.PlayOneShot(critSFX);
     }
 
+
+    public IEnumerator ChargeInterrupt()
+    {
+            chargeInterrupt = true;
+            yield return new WaitForSeconds(0.018f);
+            chargeInterrupt = false;
+
+    }
 
 
 }

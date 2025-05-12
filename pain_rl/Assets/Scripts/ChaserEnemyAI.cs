@@ -8,7 +8,7 @@ public class ChaserEnemyAI : MonoBehaviour
     [SerializeField] public float agroRange = 5f;
     [SerializeField] public float wanderRange = 3f;
     [SerializeField] public float chaseSpeedMultiplier = 2f;
-    [SerializeField] public float timeToEndChase = 2f;   //DEÐÝÞÝRSE !!! FADE DEÐÝÞÝR.
+    [SerializeField] public float timeToEndChase = 2f;   //DEÄžÄ°ÅžÄ°RSE !!! FADE DEÄžÄ°ÅžÄ°R.
     [SerializeField] public int rayCount = 15;
     [SerializeField] public float coneAngle = 75f;
 

@@ -9,11 +9,13 @@ public class EnemyCollision : MonoBehaviour
 
     private DasherEnemyAI dasher;
     private EntitySFX sfx;
+    public bool isKnockedBack;
 
     private void Start()
     {
         dasher = GetComponent<DasherEnemyAI>();
         sfx = GetComponent<EntitySFX>();
+        isKnockedBack = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

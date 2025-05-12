@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9111004742096797293}
   - component: {fileID: 253017761765704976}
   - component: {fileID: 3113238025809515808}
+  - component: {fileID: 6375051406226390858}
   - component: {fileID: 8885996972727439429}
   m_Layer: 5
   m_Name: Floating Hit Text
@@ -150,8 +151,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec492331b9dcb54f8bdead98be2bf64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationLength: 0.6
+  animationLength: 0.533
+  originalY: 5
+  newY: 0
   scaleMultiplier: 0
+--- !u!114 &6375051406226390858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5467357853809653287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4675f6c9dc68e4c877b9195d7adf72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &8885996972727439429
 Animator:
   serializedVersion: 7
